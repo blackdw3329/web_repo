@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="https://kit.fontawesome.com/7111c58be9.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="main.css">
+        <title>Document</title>
+        <style>
+            #menu 
+            {
+                list-style: none;
+                height: 40px;
+                padding: 5px 1px;
+                margin:0;
+                background: #4e69e2;
+            }
+            #menu li
+            {
+                float: left;
+                position: relative;
+                margin: 5px 30px;
+                padding:0;
+            }
+            #menu li a
+            {
+                display: block;
+                font-family: "궁서체";  /*궁서체 개웃기네 ㅋㅋ*/
+                font-weight: bold;
+                font-size: 20px;
+                color: black;
+                margin: 0;
+                text-decoration-line: none;
+                padding: 4px 8px;
+                text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
+            }
+            #menu li i
+            {
+                display: block;
+                margin: 0;
+                padding: 7px 8px;
+            }
+            #menu li:hover > i
+            {
+                background: blueviolet;
+                color: wheat;
+            }
+            #menu li:hover > a
+            {
+                background: blueviolet;
+                color: wheat;
+            }
+            #menu ul
+            {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                position: absolute;
+                left: 5;
+                top:40px;
+                width: 105px;
+                background: #91e6a6;
+                text-align: center;
+            }
+            #menu ul li
+            {
+                float: none;
+                margin:0;
+                padding:0;
+            }
+        </style>
+    </head>
+    <body>
+        <ul id="menu">
+            <li><a onclick="location.href='health_info.html'">운동정보</a></li>
+            <li><a href="stretching_info.html">스트레칭</a></li><!--이건 아닌감?-->
+            <li><a href="운동기록">운동기록</a></li>
+            <li><a href="근처 헬스장">근처 헬스장</a></li>
+            <li><div class="search-container">
+                <i id="search-icon" class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-box" class="hidden" placeholder="검색">
+            </div>
+            
+            </li>
+        </ul>
+        <script>
+            document.getElementById('search-icon').addEventListener('click', function() {
+            var searchBox = document.getElementById('search-box');
+            searchBox.classList.toggle('hidden');
+            });
+        </script>
+    </body>
+</html>
