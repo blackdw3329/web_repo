@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/7111c58be9.js" crossorigin="anonymous"></script>
+    <title>Image Slider</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "여기어때 잘난체";
+        }
+
+        #menu {
+            list-style: none;
+            height: 40px;
+            padding: 30px 1px;
+            margin: 0;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #menu li {
+            margin: 5px 1%;
+            padding: 0;
+            flex: 1;
+            text-align: center; /* Center-align text */
+        }
+
+        #menu li a {
+            display: block;
+            font-weight: bold;
+            font-size: 20px;
+            color: rgb(0, 132, 255);
+            margin: 0;
+            text-decoration-line: none;
+            padding: 4px 8px;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+
+        #menu li i {
+            display: block;
+            margin: 0;
+            padding: 7px 8px;
+        }
+
+        #menu li:hover > i,
+        #menu li:hover > a {
+            /*background: blueviolet;*/
+            color: wheat;
+            text-decoration: underline; 
+            text-underline-position: under;
+        }
+
+        #menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            left: 0;
+            top: 40px;
+            width: 100%;
+            background: #91e6a6;
+            text-align: center;
+        }
+
+        #menu ul li {
+            float: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            }
+
+        #search-icon {
+            margin-right: 5px;
+        }
+
+        #search-box {
+            width: 100%;
+            padding: 4px 8px;
+            box-sizing: border-box;
+        }
+        span
+        {
+            font-size: 40px;
+            font-weight: 600;
+            color: red;
+        }
+        body 
+        {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #slider-container 
+        {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide 
+        {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 1s ease-in-out;
+        }
+
+        .text-container 
+        {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+        }
+
+        #slide1 { background: url('health_image.avif') center/cover; }
+        #slide2 { background: url('health_image2.avif') center/cover; }
+        #slide3 { background: url('health_image3.webp') center/cover; }
+    </style>
+</head>
+<body>
+    <ul id="menu">
+        <li><a class="o_left" href='toolbar.html'>根삼육오</a></li>
+        <li><a onclick="location.href='health_info.html'">운동정보</a></li>
+        <li><a href="운동기록">운동기록</a></li>
+        <li><a href="근처 헬스장">근처 헬스장</a></li>
+        <li>
+            <div class="search-container">
+                <i id="search-icon" class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-box" class="hidden" placeholder="검색">
+            </div>
+        </li>
+    </ul>
+    <div id="slider-container">
+        <div id="slide1" class="slide">
+            <div class="text-container">
+                <h1>根3<span>6</span>5</h1>
+                <p>여기에 첫 번째 사진과 관련된 텍스트를 추가하세요.</p>
+            </div>
+        </div>
+        <div id="slide2" class="slide">
+            <div class="text-container">
+                <h1>根3<span>6</span>5</h1>
+                <p>여기에 두 번째 사진과 관련된 텍스트를 추가하세요.</p>
+            </div>
+        </div>
+        <div id="slide3" class="slide">
+            <div class="text-container">
+                <h1>根3<span>6</span>5</h1>
+                <p>여기에 세 번째 사진과 관련된 텍스트를 추가하세요.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function showSlide(index) 
+        {
+            slides.forEach((slide, i) => 
+            {
+                slide.style.transform = `translateY(${100 * (i - index)}%)`;
+            });
+        }
+
+        function nextSlide() 
+        {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        setInterval(nextSlide, 5000); // 5초마다 다음 슬라이드로 전환
+
+        document.getElementById('search-icon').addEventListener('click', function() {
+            var searchBox = document.getElementById('search-box');
+            searchBox.classList.toggle('hidden');
+            });
+    </script>
+</body>
+</html>
