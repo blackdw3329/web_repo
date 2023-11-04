@@ -2,12 +2,88 @@
 <html>
 <head>
     <style>
+
+            #menu {
+                list-style: none;
+                height: 40px;
+                padding: 30px 1px;
+                margin: 0;
+                background: white;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            #menu li {
+                margin: 5px 1%;
+                padding: 0;
+                flex: 1;
+                text-align: center; /* Center-align text */
+            }
+
+            #menu li a {
+                display: block;
+                font-weight: bold;
+                font-size: 20px;
+                color: rgb(0, 132, 255);
+                margin: 0;
+                text-decoration-line: none;
+                padding: 4px 8px;
+                text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
+            }
+
+            #menu li i {
+                display: block;
+                margin: 0;
+                padding: 7px 8px;
+            }
+
+            #menu li:hover > i,
+            #menu li:hover > a {
+                /*background: blueviolet;*/
+                color: wheat;
+                text-decoration: underline; 
+                text-underline-position: under;
+            }
+
+            #menu ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                position: absolute;
+                left: 0;
+                top: 40px;
+                width: 100%;
+                background: #91e6a6;
+                text-align: center;
+            }
+
+            #menu ul li {
+                float: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .search-container {
+                display: flex;
+                align-items: center;
+            }
+
+            #search-icon {
+                margin-right: 5px;
+            }
+
+            #search-box {
+                width: 100%;
+                padding: 4px 8px;
+                box-sizing: border-box;
+            }
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            font-family: "여기어때 잘난체";
         }
         iframe {
             width: 40%;
@@ -17,6 +93,18 @@
     </style>
 </head>
 <body>
+    <ul id="menu">
+            <li><a class="o_left" href='index.html'>根삼육오</a></li>
+            <li><a href='muscle.html'>운동정보</a></li>
+            <li><a href="운동기록">운동기록</a></li>
+            <li><a href="map.html">근처 헬스장</a></li>
+            <li>
+                <div class="search-container">
+                    <i id="search-icon" class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-box" class="hidden" placeholder="검색">
+                </div>
+            </li>
+        </ul>
     <iframe src="map api.html" allowfullscreen scrolling="no"></iframe>
 </body>
 </html>
