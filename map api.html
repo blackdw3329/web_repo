@@ -1,62 +1,67 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>주변 헬스장 찾기</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8IrxL9rVX3Hv06oS01l7g3ZNYqENGflQ&libraries=places"></script>
-    <script>
-        var map;
-        var service;
+    <head>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8IrxL9rVX3Hv06oS01l7g3ZNYqENGflQ&libraries=places"></script>
+        <script>
+            var map;
+            var service;
+            var infowindow;
 
-        function initMap() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    var userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            function initMap() {
+                infowindow = new google.maps.InfoWindow();
 
-                    map = new google.maps.Map(document.getElementById('map'), {
-                        center: userLocation,
-                        zoom: 17 // 지도 초기 확대 수준
+                map = new google.maps.Map(
+                    document.getElementById('map'), { 
+                        zoom: 17,
+                        disableDefaultUI: true
                     });
 
-                    var request = {
-                        location: userLocation,
-                        radius: 5000,
-                        type: ['gym']
-                    };
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
 
-                    service = new google.maps.places.PlacesService(map);
-                    service.nearbySearch(request, callback);
-                });
-            } else {
-                alert("브라우저가 Geolocation을 지원하지 않습니다.");
-            }
-        }
+                        map.setCenter(userLocation);
 
-        function callback(results, status) {
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                    createMarker(results[i]);
+                        var request = {
+                            location: userLocation,
+                            radius: 5000,
+                            query: 'gym'
+                        };
+
+                        service = new google.maps.places.PlacesService(map);
+
+                        service.textSearch(request, function(results, status) {
+                            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                                for (var i = 0; i < results.length; i++) {
+                                    createMarker(results[i]);
+                                }
+                            }
+                        });
+                    });
                 }
             }
-        }
 
-        function createMarker(place) {
-            var marker = new google.maps.Marker({
-                map: map,
-                position: place.geometry.location
-            });
+            function createMarker(place) {
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: place.geometry.location,
+                    title: place.name
+                });
 
-            var infowindow = new google.maps.InfoWindow();
-            google.maps.event.addListener(marker, 'click', function() {
-                infowindow.setContent(place.name);
-                infowindow.open(map, this);
-            });
-        }
-    </script>
-</head>
-<body>
-    <div id="map" style="height: 500px; width: 100%;"></div>
-    <script>
-        initMap();
-    </script>
-</body>
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.setContent(place.name);
+                    infowindow.open(map, this);
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <div id="map" style="height: 820px; width: 100%;"></div>
+        <script>
+            initMap();
+        </script>
+    </body>
 </html>
