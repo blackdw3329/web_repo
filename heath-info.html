@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="main.css" type="text/css" rel="stylesheet">
+    <title>health info</title>
+    <style>
+        .container 
+        {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .image-container 
+        {
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-right: 25px;
+            margin-left: 25px;
+        }
+
+        .image-container img 
+        {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .text-container 
+        {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .text-under-container
+        {
+            margin-top: 100px;
+            font-size: 18px;
+            color: #333;
+            margin-left: 25px;
+
+        }
+        .text-under-container a
+        {
+            font-weight: bolder;
+            color: rgb(137, 137, 208);
+            text-decoration-line: none;
+        }
+    </style>
+</head>
+    <ul class="menu">
+        <li><a class="o_left" href='index.html'>根삼육오</a></li>
+        <li><a onclick="location.href='health_info.html'">운동정보</a></li>
+        <li><a href="health-memori.html">운동기록</a></li>
+        <li><a href="map.html">근처 헬스장</a></li>
+        <li>
+            <div class="search-container">
+                <i class="search-icon" class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-box" class="hidden" placeholder="검색">
+            </div>
+        </li>
+    </ul>
+    <div class="container">
+        <div class="image-container">
+            <img src="전완근.jpg" alt="전완근 사진">
+        </div>
+    <div class="text-container">
+        <p>전완근<br>전완근 설명<br>전완근 운동 설명</p>
+    </div>
+  </div>
+  <div class="text-under-container">
+    <a href="https://www.youtube.com/watch?v=vEKUoVUqG8M">
+        <img src="https://img.youtube.com/vi/vEKUoVUqG8M/mqdefault.jpg"><br>
+        전완근 운동 유튜브 링크</a>
+    </div>
+</body>
+</html>
