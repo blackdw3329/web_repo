@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,20 +28,39 @@
             height: 100%;
             position: absolute;
             background: url(health_image2.avif) center/cover;
-        }
-        .text-container
+        }#slider-container 
         {
-            color: white;
-            position: absolute;
-            text-align: center;
-            transform: translate(-50%,-50%);
-            top: 50%;
-            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
         }
+
+        .slide 
+        {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 1s ease-in-out;
+        }
+
+        .text-container 
+        {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+        }
+        #slide1 { background: url('health_image.avif') center/cover; }
+        #slide2 { background: url('health_image2.avif') center/cover; }
+        #slide3 { background: url('health_image3.webp') center/cover; }
     </style>
 </head>
 <body>
-    <header>
         <ul class="menu">
             <li><a class="o_left" href='index.html'>根삼육오</a></li>
             <li><a href="muscle.html">운동정보</a></li>
@@ -53,14 +73,46 @@
                 </div>
             </li>
         </ul>
-    </header>
-    <main>
-        <div class="image-container">
-            <div class="text-container">
-                <h1>根3<span>6</span>5</h1>
-                <p>운동 관련 문구</p>
+        <div id="slider-container">
+            <div id="slide1" class="slide">
+                <div class="text-container">
+                    <h1>根3<span>6</span>5</h1>
+                    <p>운동 관련 문구 1</p>
+                </div>
+            </div>
+            <div id="slide2" class="slide">
+                <div class="text-container">
+                    <h1>根3<span>6</span>5</h1>
+                    <p>운동 관련 문구 2</p>
+                </div>
+            </div>
+            <div id="slide3" class="slide">
+                <div class="text-container">
+                    <h1>根3<span>6</span>5</h1>
+                    <p>운동 관련 문구 3</p>
+                </div>
             </div>
         </div>
-    </main>
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+    
+        function showSlide(index) 
+        {
+            slides.forEach((slide, i) => 
+            {
+                slide.style.transform = `translateY(${100 * (i - index)}%)`;
+            });
+        }
+    
+        function nextSlide() 
+        {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+    
+        setInterval(nextSlide, 5000); // 5초마다 다음 슬라이드로 전환
+        showSlide(currentSlide);
+    </script>   
 </body>
 </html>
