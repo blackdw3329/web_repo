@@ -60,11 +60,11 @@
             signInWithEmailAndPassword(auth, signInemail, signInpassword)
                 .then((userCredential) => {
                     console.log(userCredential);
-                    // 로그인 성공
+                    
                     const user = userCredential.user;
                     loginMessage.textContent = '로그인 성공. 로그인 했습니다.';
                     signUpMessage.textContent = '';
-                    // 추가적인 로직
+                    
                 })
                 .catch((error) => {
                     console.log('로그인 실패');
@@ -72,7 +72,7 @@
                     const errorMessage = error.message;
                     loginMessage.textContent = '로그인 실패. 다시 시도해주세요.';
                     signUpMessage.textContent = '';
-                    // 에러 처리 로직
+                    
                 });
         });
 
@@ -84,11 +84,11 @@
             createUserWithEmailAndPassword(auth, signUpemail, signUppassword)
                 .then((userCredential) => {
                     console.log(userCredential);
-                    // 회원가입 성공
+                    
                     const user = userCredential.user;
                     signUpMessage.textContent = '회원가입이 완료되었습니다.';
                     loginMessage.textContent = '';
-                    // 추가적인 로직
+                    
                 })
                 .catch((error) => {
                     console.log('회원가입 실패');
@@ -96,7 +96,7 @@
                     const errorMessage = error.message;
                     signUpMessage.textContent = '회원가입 실패. 다시 시도해주세요.';
                     loginMessage.textContent = '';
-                    // 에러 처리 로직
+                    
                 });
         });
 
