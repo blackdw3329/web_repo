@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>달력</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Questrial&display=swap');
+
+        body { background-color : white; } 
+
+        div {
+            background-color : white;
+            height: auto;
+            width: 400px;
+            margin: 0px;
+            padding: 20px;
+            float: left;
+        }
+
+        td {
+            width: 50px;
+            height: 50px;
+        }
+
+        .Calendar {
+            text-align: center;
+        }
+
+        .Calendar>thead>tr:first-child>td {
+            font-family: 'Questrial', sans-serif;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .Calendar>thead>tr:last-child>td {
+            font-family: 'Questrial', sans-serif;
+            font-weight: 600;     
+        }
+
+        .Calendar>tbody>tr>td>p {
+            font-family: 'Montserrat', sans-serif;
+            height: 45px;
+            width: 45px;
+            border-radius: 45px;
+            transition-duration: .2s;
+            line-height: 45px;
+            margin: 2.5px;
+            display: block;
+            text-align: center;
+        }        
+
+        .pastDay {
+            color: lightgray;
+        }
+
+        .today {
+            background-color: #F5D042;            
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .futureDay {
+            background-color: #FFFFFF;
+            cursor: pointer;
+        }
+        .futureDay:hover{
+            background:#eee;
+        }
+
+        .futureDay.choiceDay,
+        .today.choiceDay {
+            background: #0A174E;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .Calendar>tbody>tr>td:nth-child(7) {
+            color: blue;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .Calendar>tbody>tr>td:nth-child(1) {
+            color: red;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        window.onload = function () { buildCalendar(); } 
+
+        let nowMonth = new Date();
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        function buildCalendar() {
+
+            let firstDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth(), 1);     
+            let lastDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, 0);  
+
+            let tbody_Calendar = document.querySelector(".Calendar > tbody");
+            document.getElementById("calYear").innerText = nowMonth.getFullYear();             
+            document.getElementById("calMonth").innerText = leftPad(nowMonth.getMonth() + 1);  
+
+            while (tbody_Calendar.rows.length > 0) {
+                tbody_Calendar.deleteRow(tbody_Calendar.rows.length - 1);
+            }
+
+            let nowRow = tbody_Calendar.insertRow();                   
+
+            for (let j = 0; j < firstDate.getDay(); j++) {  
+                let nowColumn = nowRow.insertCell();
+            }
+
+            for (let nowDay = firstDate; nowDay <= lastDate; nowDay.setDate(nowDay.getDate() + 1)) {    
+
+                let nowColumn = nowRow.insertCell();
+
+                let newDIV = document.createElement("p");
+                newDIV.innerHTML = leftPad(nowDay.getDate());
+                nowColumn.appendChild(newDIV);
+
+                if (nowDay.getDay() == 6) {
+                    nowRow = tbody_Calendar.insertRow();
+                }
+
+                if (nowDay < today) {
+                    newDIV.className = "pastDay";
+                }
+                else if (nowDay.getFullYear() == today.getFullYear() && nowDay.getMonth() == today.getMonth() && nowDay.getDate() == today.getDate()) { // 오늘인 경우           
+                    newDIV.className = "today";
+                    newDIV.onclick = function () { choiceDate(this); }
+                }
+                else {
+                    newDIV.className = "futureDay";
+                    newDIV.onclick = function () { choiceDate(this); }
+                }
+            }
+        }
+        function choiceDate(newDIV) {
+            if (document.getElementsByClassName("choiceDay")[0]) {              
+                document.getElementsByClassName("choiceDay")[0].classList.remove("choiceDay");
+            }
+            newDIV.classList.add("choiceDay");
+        }
+        function prevCalendar() {
+            nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() - 1, nowMonth.getDate());
+            buildCalendar();
+        }
+        function nextCalendar() {
+            nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, nowMonth.getDate());
+            buildCalendar();
+        }
+        function leftPad(value) {
+            if (value < 10) {
+                value = "0" + value;
+                return value;
+            }
+            return value;
+        }
+        function sendSelectedDate(date) {
+            window.parent.postMessage({ date: date }, '*');
+        }
+        function onDateClick(date) {
+            sendSelectedDate(date);
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <table class="Calendar">
+            <thead>
+                <tr>
+                    <td onClick="prevCalendar();" style="cursor:pointer;">&#60;</td>
+                    <td colspan="5">
+                        <span id="calYear"></span>년
+                        <span id="calMonth"></span>월
+                    </td>
+                    <td onClick="nextCalendar();" style="cursor:pointer;">&#62;</td>
+                </tr>
+                <tr>
+                    <td>일</td>
+                    <td>월</td>
+                    <td>화</td>
+                    <td>수</td>
+                    <td>목</td>
+                    <td>금</td>
+                    <td>토</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
