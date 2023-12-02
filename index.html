@@ -54,42 +54,75 @@
             transform: translate(-50%, -50%);
             color: white;
             text-align: center;
+            font-family: '궁서체';
+            font-size: 20px;
+            text-shadow: 10px black;
         }
-        #slide1 { background: url('health_image.avif') center/cover; }
-        #slide2 { background: url('health_image2.avif') center/cover; }
-        #slide3 { background: url('health_image3.webp') center/cover; }
+        #slide1 { background: url('healthpic1.jpg') center/cover; }
+        #slide2 { background: url('healthpic2.jpg') center/cover; }
+        #slide3 { background: url('healthpic3.jpg') center/cover; }
+
+        #healthword{
+            color: black;
+            text-shadow: 10px black;
+        }
+        #logo{
+            width: 200px;
+        }
     </style>
 </head>
 <body>
-        <ul class="menu">
-            <li><a class="o_left" href='index.html'>根삼육오</a></li>
+    <div class="nav3">
+        <a href="index.html">
+            <img src="logo.png"></img>
+        </a>
+        <ul class="menu4">
             <li><a href="muscle.html">운동정보</a></li>
             <li><a href="health-memori.html">운동기록</a></li>
             <li><a href="map.html">근처 헬스장</a></li>
-            <li>
-                <div class="search-container">
-                    <i class="search-icon" class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="search-box" class="hidden" placeholder="검색">
-                </div>
-            </li>
         </ul>
+
+        <div class="log">
+            <a href="login.html">로그인</a>
+            <a href="login.html">회원가입</a>
+        </div>
+    </div>
+<!-- 
+명언
+나는 포기했을 때의 기분을 이미 알고 있다. 
+그래서 포기하지 않았을 때에 무슨 일이 일어날지 알고 싶다. -네일라 레이
+
+99도까지 열심히 온도를 올려 놓아도 마지막 1도를 넘기지 못하면 영원히 물은 끓지 않는다. 
+물을 끓이는 건 마지막 1도, 포기하고 싶은 바로 그 1분을 참아내는 것.  -김연아
+
+하고자 하는 자는 방법을 찾고,
+하기 싫어하는 자는 핑계를 찾는다 -이건 누구지
+
+일단 규칙적으로 운동하면,
+이것을 멈추기가 어려울 것이다. -에린 그레이
+
+-->
         <div id="slider-container">
             <div id="slide1" class="slide">
                 <div class="text-container">
-                    <h1>根3<span>6</span>5</h1>
-                    <p>운동 관련 문구 1</p>
+                    <img id="logo" src="logo.png">
+                    <p>우리가 늙어서 운동을 안하는것이 아니라, <br>
+                         운동을 그만두기 때문에 늙는 것이다</p>
+                    <!-- 케너스 쿠퍼 -->
                 </div>
             </div>
             <div id="slide2" class="slide">
                 <div class="text-container">
-                    <h1>根3<span>6</span>5</h1>
-                    <p>운동 관련 문구 2</p>
+                    <img id="logo" src="logo.png">
+                    <p>일단 규칙적으로 운동하면,<br>
+                        이것을 멈추기가 어려울 것이다.</p>
                 </div>
             </div>
             <div id="slide3" class="slide">
                 <div class="text-container">
-                    <h1>根3<span>6</span>5</h1>
-                    <p>운동 관련 문구 3</p>
+                    <img id="logo" src="logo.png">
+                    <p id="healthword">하고자 하는 자는 방법을 찾고,<br>
+                        하기 싫어하는 자는 핑계를 찾는다</p>
                 </div>
             </div>
         </div>
