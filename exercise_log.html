@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>달력</title>
+  <title>운동 기록 페이지</title>
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
-  <script src="getinfo.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css?family=Questrial&display=swap');
 
@@ -106,154 +105,34 @@
     .recordList {
       margin-top: 20px;
     }
+
+
+    /*운동정보 출력할 게시판*/ 
+    .rounded-box {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      background-color: #f0f0f0;
+      color: black;
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 50px;
+    }
+
+    .title-area {
+      position: absolute;
+      top: 0px; /* 위쪽 여백을 더 크게 조절 */
+      left: 0;
+      width: 94%;
+      height: 50px;
+      background-color: #3498db;
+      padding: 10px;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      color: #0a0a0a;
+      font-weight: bold;
+    }
   </style>
-
-  <script>
-    var firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-
-    var database = firebase.database();
-
-    function addExerciseRecord(date, exerciseType, exerciseCount, setCount) {
-      var recordRef = database.ref('exercise-records/' + date);
-      recordRef.set({
-        exerciseType: exerciseType,
-        exerciseCount: exerciseCount,
-        setCount: setCount
-      });
-    }
-
-    function loadExerciseRecords(date) {
-      var recordRef = database.ref('exercise-records/' + date);
-      recordRef.once('value').then(function (snapshot) {
-        var record = snapshot.val();
-        if (record) {
-          displayExerciseRecord(record);
-        } else {
-          clearExerciseRecord();
-        }
-      });
-    }
-
-    function displayExerciseRecord(record) {
-      document.getElementById('exerciseType').value = record.exerciseType;
-      document.getElementById('exerciseCount').value = record.exerciseCount;
-      document.getElementById('setCount').value = record.setCount;
-    }
-
-    function clearExerciseRecord() {
-      document.getElementById('exerciseType').value = '';
-      document.getElementById('exerciseCount').value = '';
-      document.getElementById('setCount').value = '';
-    }
-  </script>
-  <script>
-    window.onload = function () {buildCalendar();}
-
-    let nowMonth = new Date();
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    function buildCalendar() {
-
-      let firstDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth(), 1);
-      let lastDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, 0);
-
-      let tbody_Calendar = document.querySelector(".Calendar > tbody");
-      document.getElementById("calYear").innerText = nowMonth.getFullYear();
-      document.getElementById("calMonth").innerText = leftPad(nowMonth.getMonth() + 1);
-
-      while (tbody_Calendar.rows.length > 0) {
-        tbody_Calendar.deleteRow(tbody_Calendar.rows.length - 1);
-      }
-
-      let nowRow = tbody_Calendar.insertRow();
-
-      for (let j = 0; j < firstDate.getDay(); j++) {
-        let nowColumn = nowRow.insertCell();
-      }
-
-      for (let nowDay = firstDate; nowDay <= lastDate; nowDay.setDate(nowDay.getDate() + 1)) {
-
-        let nowColumn = nowRow.insertCell();
-
-        let newDIV = document.createElement("p");
-        newDIV.innerHTML = leftPad(nowDay.getDate());
-        nowColumn.appendChild(newDIV);
-
-        if (nowDay.getDay() == 6) {
-          nowRow = tbody_Calendar.insertRow();
-        }
-
-        if (nowDay < today) {
-          newDIV.className = "pastDay";
-        }
-        else if (nowDay.getFullYear() == today.getFullYear() && nowDay.getMonth() == today.getMonth() && nowDay.getDate() == today.getDate()) { // 오늘인 경우           
-          newDIV.className = "today";
-          newDIV.onclick = function () {choiceDate(this);}
-        }
-        else {
-          newDIV.className = "futureDay";
-          newDIV.onclick = function () {choiceDate(this);}
-        }
-      }
-    }
-
-    function choiceDate(newDIV) {
-      if (document.getElementsByClassName("choiceDay")[0]) {
-        document.getElementsByClassName("choiceDay")[0].classList.remove("choiceDay");
-      }
-      newDIV.classList.add("choiceDay");
-
-      // Load exercise records for the selected date
-      var selectedDate = newDIV.firstChild.innerHTML;
-      loadExerciseRecords(formatDate(selectedDate));
-    }
-
-    function prevCalendar() {
-      nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() - 1, nowMonth.getDate());
-      buildCalendar();
-    }
-
-    function nextCalendar() {
-      nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, nowMonth.getDate());
-      buildCalendar();
-    }
-
-    function leftPad(value) {
-      if (value < 10) {
-        value = "0" + value;
-        return value;
-      }
-      return value;
-    }
-
-    function sendSelectedDate(date) {
-      window.parent.postMessage({date: date}, '*');
-    }
-
-    function onDateClick(date) {
-      sendSelectedDate(date);
-    }
-
-    function saveExerciseRecord() {
-      var selectedDate = document.querySelector('.choiceDay p').innerHTML;
-      var exerciseType = document.getElementById('exerciseType').value;
-      var exerciseCount = document.getElementById('exerciseCount').value;
-      var setCount = document.getElementById('setCount').value;
-
-      addExerciseRecord(selectedDate, exerciseType, exerciseCount, setCount);
-    }
-
-  </script>
 </head>
 
 <body>
@@ -282,32 +161,129 @@
       </tbody>
     </table>
   </div>
-  <div class="recordForm">
-    <h3>운동 기록</h3>
-    <label for="exerciseType">운동 종류:</label>
-    <select id="exerciseType">
-      <option value="Squat">스쿼트</option>
-    </select>
-    <br>
-    <label for="exerciseCount">운동 개수:</label>
-    <input type="text" id="exerciseCount">
-    <br>
-    <label for="setCount">세트 개수:</label>
-    <input type="text" id="setCount">
-    <br>
-    <button onclick="saveExerciseRecord()">저장</button>
-  </div>
+  <div class="rounded-box">
+    <div class="title-area">
+      <!-- 운동 정보 저장 --><br><br><br>
+      <label for="exerciseType">운동종류:</label>
+      <select name="exercise" class="exerciseDate">
+        <option value="exercise1" selected>exercise1</option>
+        <option value="exercise2">exercise2</option>
+        <option value="exercise3">exercise3</option>
+        <option value="exercise4">exercise4</option>
+      <select><br>
 
-  <div class="recordList">
-    <h3>운동 기록</h3>
-    <label for="displayExerciseType">운동 종류:</label>
-    <input type="text" id="displayExerciseType" disabled>
-    <br>
-    <label for="displayExerciseCount">운동 개수:</label>
-    <input type="text" id="displayExerciseCount" disabled>
-    <br>
-    <label for="displaySetCount">세트 개수:</label>
-    <input type="text" id="displaySetCount" disabled>
+        <label for="exerciseCount">운동 개수:</label>
+        <input type="text" class="exerciseCount"><br>
+
+        <label for="exercisOther">다른 옵션:</label>
+        <input type="number" class="exerciseOther"><br>  
+
+        <button onclick="saveExercise()">운동 기록 저장</button>
+        <!-- 운동정보 출력 -->
+        <h3>저장된 운동 기록</h3>
+        <ul id="exerciseList"></ul>
+        <h5 id="userStatus"></h5>
+    </div>
   </div>
+  <script src="getinfo.js"></script>
+  <script>
+    window.onload = function () {buildCalendar();}
+  
+    let nowMonth = new Date();
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+  
+    function buildCalendar() {
+  
+      let firstDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth(), 1);
+      let lastDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, 0);
+  
+      let tbody_Calendar = document.querySelector(".Calendar > tbody");
+      document.getElementById("calYear").innerText = nowMonth.getFullYear();
+      document.getElementById("calMonth").innerText = leftPad(nowMonth.getMonth() + 1);
+  
+      while (tbody_Calendar.rows.length > 0) {
+        tbody_Calendar.deleteRow(tbody_Calendar.rows.length - 1);
+      }
+  
+      let nowRow = tbody_Calendar.insertRow();
+  
+      for (let j = 0; j < firstDate.getDay(); j++) {
+        let nowColumn = nowRow.insertCell();
+      }
+  
+      for (let nowDay = firstDate; nowDay <= lastDate; nowDay.setDate(nowDay.getDate() + 1)) {
+  
+        let nowColumn = nowRow.insertCell();
+  
+        let newDIV = document.createElement("p");
+        newDIV.innerHTML = leftPad(nowDay.getDate());
+        nowColumn.appendChild(newDIV);
+  
+        if (nowDay.getDay() == 6) {
+          nowRow = tbody_Calendar.insertRow();
+        }
+  
+        if (nowDay < today) {
+          newDIV.className = "pastDay";
+        }
+        else if (nowDay.getFullYear() == today.getFullYear() && nowDay.getMonth() == today.getMonth() && nowDay.getDate() == today.getDate()) { // 오늘인 경우           
+          newDIV.className = "today";
+          newDIV.onclick = function () {choiceDate(this);}
+        }
+        else {
+          newDIV.className = "futureDay";
+          newDIV.onclick = function () {choiceDate(this);}
+        }
+      }
+    }
+  
+    function choiceDate(newDIV) {
+      if (document.getElementsByClassName("choiceDay")[0]) {
+        document.getElementsByClassName("choiceDay")[0].classList.remove("choiceDay");
+      }
+      newDIV.classList.add("choiceDay");
+  
+      // Load exercise records for the selected date
+      var selectedDate = newDIV.firstChild.innerHTML;
+      loadExerciseRecords(formatDate(selectedDate));
+    }
+  
+    function prevCalendar() {
+      nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() - 1, nowMonth.getDate());
+      buildCalendar();
+    }
+  
+    function nextCalendar() {
+      nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, nowMonth.getDate());
+      buildCalendar();
+    }
+  
+    function leftPad(value) {
+      if (value < 10) {
+        value = "0" + value;
+        return value;
+      }
+      return value;
+    }
+  
+    function sendSelectedDate(date) {
+      window.parent.postMessage({date: date}, '*');
+    }
+  
+    function onDateClick(date) {
+      sendSelectedDate(date);
+    }
+  
+    function saveExerciseRecord() {
+      var selectedDate = document.querySelector('.choiceDay p').innerHTML;
+      var exerciseType = document.getElementById('exerciseType').value;
+      var exerciseCount = document.getElementById('exerciseCount').value;
+      var setCount = document.getElementById('setCount').value;
+  
+      addExerciseRecord(selectedDate, exerciseType, exerciseCount, setCount);
+    }
+  
+  </script>
 </body>
 </html>

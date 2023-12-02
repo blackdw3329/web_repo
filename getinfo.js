@@ -28,7 +28,7 @@ auth.onAuthStateChanged((user) => {
 
 // 운동정보 데이터베이스에 전송 함수
 function saveExercise() {
-    const exerciseDate = document.getElementById('exerciseDate').value;
+    const exerciseDate = selectedDate;
     const exerciseType = document.getElementById('exerciseType').value;
     const exerciseOther = document.getElementById('exerciseOther').value;
 
