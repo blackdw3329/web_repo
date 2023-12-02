@@ -1,0 +1,85 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  margin-right: 5px;
+}
+
+.search-box {
+  width: 100%;
+  padding: 4px 8px;
+  box-sizing: border-box;
+}
+
+.nav3 {
+  width: 100%;
+  position: relative;
+  text-align: center;
+  background-color: rgb(255, 255, 255)a;
+  font-family: 'Noto Sans KR', sans-serif; /* 폰트 설정 추가 */
+}
+
+.nav3>a img {
+  line-height: 80px;
+  display: block;
+  height: 150px;
+  position: absolute;
+  left: 30px;
+  text-decoration-line: none;
+}
+
+.nav3>div {
+  padding: 0 20px;
+  height: 30px;
+  position: absolute;
+  right: 30px;
+  top: 40%;
+  transform: translateY(-15px);
+  border: 2px solid #fff;
+  border-radius: 30px;
+  text-decoration-line: none;
+}
+
+.nav3>ul {
+  display: inline-block;
+  text-decoration-line: none;
+}
+
+.nav3>ul li {
+  float: left;
+  line-height: 100px;
+  padding: 10px 80px;
+  list-style-type: none;
+}
+
+.nav3>ul li a {
+  text-decoration-line: none;
+  font-size: 20px;
+  color: rgb(161, 15, 5);
+}
+
+.log {
+  position: absolute;
+  right: 30px;
+  top: 40%;
+  margin-top: 15px;
+}
+
+.log a {
+  text-decoration-line: none;
+  font-size: 15px;
+  font-family: 'Noto Sans KR', sans-serif; /* 폰트 설정 추가 */
+  color: rgb(88, 7, 1);
+}
+
+.image-container:hover img {
+  transform: scale(1.1); /* 확대 비율 조절 가능 */
+  transition: transform 0.3s ease; /* 부드러운 애니메이션을 위한 transition 설정 */
+}
