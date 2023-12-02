@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        #container{
+            text-align: center;
+            margin-top: 10%;
+        }
+    </style>
 </head>
 <body>
+    <div id="container">
     <div id="loginContainer">
         <form>
             <h1>로그인</h1>
-            <div> email: <input type="email" id="signInBotton" /> </div>
-            <div> password: <input type="password" id="signInPassword" /> </div>
+            <div> 이메일: <input type="email" id="signInBotton" /> </div>
+            <div> 비밀번호: <input type="password" id="signInPassword" /> </div>
             <button type="submit" id="signInButton">로그인 하기</button>
             <button type="button" id="goToSignUp">회원가입 하러 가기</button>
             <p id="loginMessage"></p>
@@ -20,14 +27,14 @@
     <div id="signUpContainer" style="display: none;">
         <form>
             <h1>회원가입</h1>
-            <div> email: <input type="email" id="signUpBotton" /> </div>
-            <div> password: <input type="password" id="signUpPassword" /> </div>
+            <div> 사용자의 이메일: <input type="email" id="signUpBotton" /> </div>
+            <div> 비밀번호 설정: <input type="password" id="signUpPassword" /> </div>
             <button type="submit" id="signUpButton">회원가입 하기</button>
             <button type="button" id="goToLogin">로그인 하러 가기</button>
             <p id="signUpMessage"></p>
         </form>
     </div>
-
+    </div>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js";
