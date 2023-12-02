@@ -79,7 +79,7 @@
     font-family: '궁서체';
   }
   
-  .nav3>img {
+  .nav3>a img {
     line-height: 80px;
     display: block;
     height: 150px;
