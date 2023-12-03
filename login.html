@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        #container{
+            text-align: center;
+            margin-top: 10%;
+        }
+    </style>
 </head>
 <body>
+    <div id="container">
     <div id="loginContainer">
         <form>
             <h1>로그인</h1>
-            <div> email: <input type="email" id="signInBotton" /> </div>
-            <div> password: <input type="password" id="signInPassword" /> </div>
+            <div> 이메일: <input type="email" id="signInBotton" /> </div>
+            <div> 비밀번호: <input type="password" id="signInPassword" /> </div>
             <button type="submit" id="signInButton">로그인 하기</button>
             <button type="button" id="goToSignUp">회원가입 하러 가기</button>
             <p id="loginMessage"></p>
@@ -20,14 +27,14 @@
     <div id="signUpContainer" style="display: none;">
         <form>
             <h1>회원가입</h1>
-            <div> email: <input type="email" id="signUpBotton" /> </div>
-            <div> password: <input type="password" id="signUpPassword" /> </div>
+            <div> 사용자의 이메일: <input type="email" id="signUpBotton" /> </div>
+            <div> 비밀번호 설정: <input type="password" id="signUpPassword" /> </div>
             <button type="submit" id="signUpButton">회원가입 하기</button>
             <button type="button" id="goToLogin">로그인 하러 가기</button>
             <p id="signUpMessage"></p>
         </form>
     </div>
-
+    </div>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js";
@@ -62,15 +69,16 @@
                     console.log(userCredential);
                     
                     const user = userCredential.user;
-                    loginMessage.textContent = '로그인 성공. 로그인 했습니다.';
+                    alert("로그인 성공");
                     signUpMessage.textContent = '';
+                    history.back();
                     
                 })
                 .catch((error) => {
                     console.log('로그인 실패');
                     const errorCode = error.code;
                     const errorMessage = error.message;
-                    loginMessage.textContent = '로그인 실패. 다시 시도해주세요.';
+                    alert('로그인 실패. 다시시도해 주세요');
                     signUpMessage.textContent = '';
                     
                 });
@@ -86,15 +94,16 @@
                     console.log(userCredential);
                     
                     const user = userCredential.user;
-                    signUpMessage.textContent = '회원가입이 완료되었습니다.';
+                    alert("회원가입 성공");
                     loginMessage.textContent = '';
+                    location.replace("login.html")
                     
                 })
                 .catch((error) => {
                     console.log('회원가입 실패');
                     const errorCode = error.code;
                     const errorMessage = error.message;
-                    signUpMessage.textContent = '회원가입 실패. 다시 시도해주세요.';
+                    alert('회원가입 실패. 다시시도해 주세요');
                     loginMessage.textContent = '';
                     
                 });

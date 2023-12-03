@@ -1,289 +1,327 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>운동 기록 페이지</title>
-  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css?family=Questrial&display=swap');
+    <title>달력</title>
+    <style>
+        td {
+            width: 50px;
+            height: 50px;
+        }
 
-    body {
-      background-color: white;
+        .Calendar { 
+            text-align: center;
+            margin: 0 auto; 
+        }
+
+        .Calendar>thead>tr:first-child>td { font-weight: bold; }
+
+        .Calendar>thead>tr:last-child>td {
+            background-color: gray;
+            color: white;
+        }        
+
+        .pastDay{ background-color: lightgray; }
+
+        .today{            
+            background-color: #FFCA64;            
+            cursor: pointer;
+        }
+
+        .futureDay{            
+            background-color: #FFFFFF;
+            cursor: pointer;
+        }
+
+        .futureDay.choiceDay, .today.choiceDay{            
+            background-color: #3E85EF;            
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .rounded-box {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            background-color: #f0f0f0;
+            color: black;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 50px;
+      }
+
+      .title-area {
+            position: absolute;
+            top: 0px; /* 위쪽 여백을 더 크게 조절 */
+            left: 0;
+            width: 94%;
+            height: 50px;
+            background-color: #3498db;
+            padding: 10px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            color: #0a0a0a;
+            font-weight: bold;
+      }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+
+    <script>
+      const firebaseConfig = {
+    apiKey: "AIzaSyAMP0vxS4Z0okn_xHuVLXnqSUMUM_1rDro",
+    authDomain: "wlogin-4aa10.firebaseapp.com",
+    databaseURL: "https://wlogin-4aa10-default-rtdb.firebaseio.com",
+    projectId: "wlogin-4aa10",
+    storageBucket: "wlogin-4aa10.appspot.com",
+    messagingSenderId: "1042862838801",
+    appId: "1:1042862838801:web:a3b552af9131d5b3808db0",
+    measurementId: "G-0H986GY8W3"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+//로그인 확인
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // 로그인 되어있을 경우
+        document.getElementById('userStatus').innerText = `현재 로그인된 사용자: ${user.email}`;
+        loadExerciseRecords(user.uid);
+        
+    } else {
+        // 로그인 안되어있을때
+        document.getElementById('userStatus').innerText = '로그인 상태가 아닙니다.';
+    }
+});
+
+
+// 운동정보 데이터베이스에 전송 함수
+function saveExercise() {
+    const exerciseDate = getSelectedDate();
+    const exerciseType = document.getElementById('exerciseType').value;
+    const exerciseOther = document.getElementById('exerciseOther').value;
+
+    // 사용자 uid 얻어오기
+    const user = auth.currentUser;
+    if (user) {
+        const userUid = user.uid;
+
+        // 사용자 별 컬렉션에 데이터 저장
+        db.collection('users').doc(userUid).collection('exercise').doc(exerciseDate).set({
+            type: exerciseType,
+            other: exerciseOther
+        })
+        .then(() => {
+            console.log('운동 기록 추가 성공');
+            // 저장 후 필요한 작업 수행
+        })
+        .catch((error) => {
+            console.error('운동 기록 추가 실패: ', error);
+        });
+    } else {
+        console.log('사용자가 로그인되어 있지 않습니다.');
+    }
+}
+
+// 로그인된 사용자의 운동정보 불러오는거 만들어보자(함수)
+function loadExerciseRecords(userUid) {
+    db.collection('users').doc(userUid).collection('exercise').get()
+        .then((querySnapshot) => {
+            const exerciseList = document.getElementById('exerciseList');
+            exerciseList.innerHTML = '';//리스트가 추가된 상태여서 초기화시켜줌
+
+            querySnapshot.forEach((doc) => {
+                const exerciseData = doc.data();
+                const listItem = document.createElement('li');
+                listItem.textContent = `일자: ${doc.id}, 종류: ${exerciseData.type}, 기간: ${exerciseData.other}분`;
+                exerciseList.appendChild(listItem);
+            });
+        })
+        .catch((error) => {
+            console.error('운동 기록 불러오기 중 오류 발생: ', error);
+        });
+}
+    </script>
+    <script>
+        window.onload = function () { buildCalendar(); }    // 웹 페이지가 로드되면 buildCalendar 실행
+
+        let nowMonth = new Date();  // 현재 달을 페이지를 로드한 날의 달로 초기화
+        let today = new Date();     // 페이지를 로드한 날짜를 저장
+        today.setHours(0,0,0,0);    // 비교 편의를 위해 today의 시간을 초기화
+
+        // 달력 생성 : 해당 달에 맞춰 테이블을 만들고, 날짜를 채워 넣는다.
+        function buildCalendar() {
+
+            let firstDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth(), 1);     // 이번달 1일
+            let lastDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, 0);  // 이번달 마지막날
+
+            let tbody_Calendar = document.querySelector(".Calendar > tbody");
+            document.getElementById("calYear").innerText = nowMonth.getFullYear();             // 연도 숫자 갱신
+            document.getElementById("calMonth").innerText = leftPad(nowMonth.getMonth() + 1);  // 월 숫자 갱신
+
+            while (tbody_Calendar.rows.length > 0) {                        // 이전 출력결과가 남아있는 경우 초기화
+                tbody_Calendar.deleteRow(tbody_Calendar.rows.length - 1);
+            }
+
+            let nowRow = tbody_Calendar.insertRow();        // 첫번째 행 추가           
+
+            for (let j = 0; j < firstDate.getDay(); j++) {  // 이번달 1일의 요일만큼
+                let nowColumn = nowRow.insertCell();        // 열 추가
+            }
+
+            for (let nowDay = firstDate; nowDay <= lastDate; nowDay.setDate(nowDay.getDate() + 1)) {   // day는 날짜를 저장하는 변수, 이번달 마지막날까지 증가시키며 반복  
+
+                let nowColumn = nowRow.insertCell();        // 새 열을 추가하고
+                nowColumn.innerText = leftPad(nowDay.getDate());      // 추가한 열에 날짜 입력
+
+            
+                if (nowDay.getDay() == 0) {                 // 일요일인 경우 글자색 빨강으로
+                    nowColumn.style.color = "#DC143C";
+                }
+                if (nowDay.getDay() == 6) {                 // 토요일인 경우 글자색 파랑으로 하고
+                    nowColumn.style.color = "#0000CD";
+                    nowRow = tbody_Calendar.insertRow();    // 새로운 행 추가
+                }
+
+                else if (nowDay.getFullYear() == today.getFullYear() && nowDay.getMonth() == today.getMonth() && nowDay.getDate() == today.getDate()) { // 오늘인 경우           
+                    nowColumn.className = "today";
+                    nowColumn.onclick = function () { choiceDate(this); }
+                }
+                else {                                      // 미래인 경우
+                    nowColumn.className = "futureDay";
+                    nowColumn.onclick = function () { choiceDate(this); }
+                }
+            }
+        }
+
+        // 날짜 선택
+        function choiceDate(nowColumn) {
+            if (document.getElementsByClassName("choiceDay")[0]) {                              // 기존에 선택한 날짜가 있으면
+                document.getElementsByClassName("choiceDay")[0].classList.remove("choiceDay");  // 해당 날짜의 "choiceDay" class 제거
+            }
+            nowColumn.classList.add("choiceDay"); 
+            var selectedDate = getSelectedDate();
+            console.log(selectedDate);          // 선택된 날짜에 "choiceDay" class 추가
+        }
+        
+        function getSelectedDate() {
+        const selectedDateElement = document.querySelector('.choiceDay');
+        if (selectedDateElement) {
+            const year = document.getElementById("calYear").innerText;
+            const month = document.getElementById("calMonth").innerText;
+            const day = selectedDateElement.innerText;
+            return `${year}-${leftPad(month)}-${leftPad(day)}`;
+        } else {
+            return null;
+        }
     }
 
-    div {
-      background-color: white;
-      height: auto;
-      width: 400px;
-      margin: 0px;
-      padding: 20px;
-      float: left;
+    // 데이터 베이스 저장 로직
+    function saveRecordToFirestore(selectedDate) {
+            // Firestore에 데이터 저장
+            db.collection('records').add({
+                    date: selectedDate,
+                    // 다른 필드 추가 가능
+                })
+                .then((docRef) => {
+                    console.log(`기록이 저장되었습니다. Document ID: ${docRef.id}`);
+                })
+                .catch((error) => {
+                    console.error("기록 저장 오류:", error);
+                });
+        }
+
+    function saveRecord() {
+        const selectedDate = getSelectedDate();
+
+        if (selectedDate) {
+            console.log(`기록이 ${selectedDate}에 저장되었습니다.`);
+            saveRecordToFirestore(selectedDate);
+        } else {
+            console.log("날짜가 선택되지 않았습니다.");
+        }
     }
 
-    td {
-      width: 50px;
-      height: 50px;
-    }
-
-    .Calendar {
-      text-align: center;
-    }
-
-    .Calendar>thead>tr:first-child>td {
-      font-family: 'Questrial', sans-serif;
-      font-size: 1.1em;
-      font-weight: bold;
-    }
-
-    .Calendar>thead>tr:last-child>td {
-      font-family: 'Questrial', sans-serif;
-      font-weight: 600;
-    }
-
-    .Calendar>tbody>tr>td>p {
-      font-family: 'Montserrat', sans-serif;
-      height: 45px;
-      width: 45px;
-      border-radius: 45px;
-      transition-duration: .2s;
-      line-height: 45px;
-      margin: 2.5px;
-      display: block;
-      text-align: center;
-    }
-
-    .pastDay {
-      color: lightgray;
-    }
-
-    .today {
-      background-color: #F5D042;
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .futureDay {
-      background-color: #FFFFFF;
-      cursor: pointer;
-    }
-
-    .futureDay:hover {
-      background: #eee;
-    }
-
-    .futureDay.choiceDay,
-    .today.choiceDay {
-      background: #0A174E;
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .Calendar>tbody>tr>td:nth-child(7) {
-      color: blue;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .Calendar>tbody>tr>td:nth-child(1) {
-      color: red;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .recordForm {
-      margin-top: 20px;
-    }
-
-    .recordForm input,
-    .recordForm select {
-      margin-bottom: 10px;
-    }
-
-    .recordList {
-      margin-top: 20px;
-    }
+    // 예시로 버튼 클릭 시 저장 기능을 호출하는 이벤트 핸들러
+    const saveButton = document.getElementById('saveButton');
+    saveButton.addEventListener('click', saveRecord);
 
 
-    /*운동정보 출력할 게시판*/ 
-    .rounded-box {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      background-color: #f0f0f0;
-      color: black;
-      border-radius: 15px;
-      padding: 20px;
-      margin-top: 50px;
-    }
+        // 이전달 버튼 클릭
+        function prevCalendar() {
+            nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() - 1, nowMonth.getDate());   // 현재 달을 1 감소
+            buildCalendar();    // 달력 다시 생성
+        }
+        // 다음달 버튼 클릭
+        function nextCalendar() {
+            nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, nowMonth.getDate());   // 현재 달을 1 증가
+            buildCalendar();    // 달력 다시 생성
+        }
 
-    .title-area {
-      position: absolute;
-      top: 0px; /* 위쪽 여백을 더 크게 조절 */
-      left: 0;
-      width: 94%;
-      height: 50px;
-      background-color: #3498db;
-      padding: 10px;
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-      color: #0a0a0a;
-      font-weight: bold;
-    }
-  </style>
+        // input값이 한자리 숫자인 경우 앞에 '0' 붙혀주는 함수
+        function leftPad(value) {
+            if (value < 10) {
+                value = "0" + value;
+                return value;
+            }
+            return value;
+        }
+    </script>
 </head>
 
 <body>
-  <div>
     <table class="Calendar">
-      <thead>
-        <tr>
-          <td onClick="prevCalendar();" style="cursor:pointer;">&#60;</td>
-          <td colspan="5">
-            <span id="calYear"></span>년
-            <span id="calMonth"></span>월
-          </td>
-          <td onClick="nextCalendar();" style="cursor:pointer;">&#62;</td>
-        </tr>
-        <tr>
-          <td>일</td>
-          <td>월</td>
-          <td>화</td>
-          <td>수</td>
-          <td>목</td>
-          <td>금</td>
-          <td>토</td>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
+        <thead>
+            <tr>
+                <td onClick="prevCalendar();" style="cursor:pointer;">&#60;</td>
+                <td colspan="5">
+                    <span id="calYear"></span>년
+                    <span id="calMonth"></span>월
+                </td>
+                <td onClick="nextCalendar();" style="cursor:pointer;">&#62;</td>
+            </tr>
+            <tr>
+                <td>일</td>
+                <td>월</td>
+                <td>화</td>
+                <td>수</td>
+                <td>목</td>
+                <td>금</td>
+                <td>토</td>
+            </tr>
+        </thead>
+
+        <tbody>
+        </tbody>
     </table>
-  </div>
-  <div class="rounded-box">
-    <div class="title-area">
-      <!-- 운동 정보 저장 --><br><br><br>
-      <label for="exerciseType">운동종류:</label>
-      <select name="exercise" class="exerciseDate">
-        <option value="exercise1" selected>exercise1</option>
-        <option value="exercise2">exercise2</option>
-        <option value="exercise3">exercise3</option>
-        <option value="exercise4">exercise4</option>
-      <select><br>
-
-        <label for="exerciseCount">운동 개수:</label>
-        <input type="text" class="exerciseCount"><br>
-
-        <label for="exercisOther">다른 옵션:</label>
-        <input type="number" class="exerciseOther"><br>  
-
-        <button onclick="saveExercise()">운동 기록 저장</button>
-        <!-- 운동정보 출력 -->
-        <h3>저장된 운동 기록</h3>
-        <ul id="exerciseList"></ul>
-        <h5 id="userStatus"></h5>
+    <div class="rounded-box">
+      <div class="title-area">
+        <!-- 운동 정보 저장 --><br><br><br>
+        <label for="exerciseType">운동종류:</label>
+        <select name="exerciseType" id="exerciseType">
+          <option value="exercise1" selected>exercise1</option>
+          <option value="exercise2">exercise2</option>
+          <option value="exercise3">exercise3</option>
+          <option value="exercise4">exercise4</option>
+        <select><br>
+  
+          <label for="exerciseCount">운동 개수:</label>
+          <input type="text" id="exerciseCount"><br>
+  
+          <label for="exercisOther">다른 옵션:</label>
+          <input type="number" id="exerciseOther"><br>  
+  
+          <button onclick="saveExercise()">운동 기록 저장</button>
+          <!-- 운동정보 출력 -->
+          <h3>저장된 운동 기록</h3>
+          <ul id="exerciseList"></ul>
+          <h5 id="userStatus"></h5>
+      </div>
     </div>
-  </div>
-  <script src="getinfo.js"></script>
-  <script>
-    window.onload = function () {buildCalendar();}
-  
-    let nowMonth = new Date();
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-  
-    function buildCalendar() {
-  
-      let firstDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth(), 1);
-      let lastDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, 0);
-  
-      let tbody_Calendar = document.querySelector(".Calendar > tbody");
-      document.getElementById("calYear").innerText = nowMonth.getFullYear();
-      document.getElementById("calMonth").innerText = leftPad(nowMonth.getMonth() + 1);
-  
-      while (tbody_Calendar.rows.length > 0) {
-        tbody_Calendar.deleteRow(tbody_Calendar.rows.length - 1);
-      }
-  
-      let nowRow = tbody_Calendar.insertRow();
-  
-      for (let j = 0; j < firstDate.getDay(); j++) {
-        let nowColumn = nowRow.insertCell();
-      }
-  
-      for (let nowDay = firstDate; nowDay <= lastDate; nowDay.setDate(nowDay.getDate() + 1)) {
-  
-        let nowColumn = nowRow.insertCell();
-  
-        let newDIV = document.createElement("p");
-        newDIV.innerHTML = leftPad(nowDay.getDate());
-        nowColumn.appendChild(newDIV);
-  
-        if (nowDay.getDay() == 6) {
-          nowRow = tbody_Calendar.insertRow();
-        }
-  
-        if (nowDay < today) {
-          newDIV.className = "pastDay";
-        }
-        else if (nowDay.getFullYear() == today.getFullYear() && nowDay.getMonth() == today.getMonth() && nowDay.getDate() == today.getDate()) { // 오늘인 경우           
-          newDIV.className = "today";
-          newDIV.onclick = function () {choiceDate(this);}
-        }
-        else {
-          newDIV.className = "futureDay";
-          newDIV.onclick = function () {choiceDate(this);}
-        }
-      }
-    }
-  
-    function choiceDate(newDIV) {
-      if (document.getElementsByClassName("choiceDay")[0]) {
-        document.getElementsByClassName("choiceDay")[0].classList.remove("choiceDay");
-      }
-      newDIV.classList.add("choiceDay");
-  
-      // Load exercise records for the selected date
-      var selectedDate = newDIV.firstChild.innerHTML;
-      loadExerciseRecords(formatDate(selectedDate));
-    }
-  
-    function prevCalendar() {
-      nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() - 1, nowMonth.getDate());
-      buildCalendar();
-    }
-  
-    function nextCalendar() {
-      nowMonth = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, nowMonth.getDate());
-      buildCalendar();
-    }
-  
-    function leftPad(value) {
-      if (value < 10) {
-        value = "0" + value;
-        return value;
-      }
-      return value;
-    }
-  
-    function sendSelectedDate(date) {
-      window.parent.postMessage({date: date}, '*');
-    }
-  
-    function onDateClick(date) {
-      sendSelectedDate(date);
-    }
-  
-    function saveExerciseRecord() {
-      var selectedDate = document.querySelector('.choiceDay p').innerHTML;
-      var exerciseType = document.getElementById('exerciseType').value;
-      var exerciseCount = document.getElementById('exerciseCount').value;
-      var setCount = document.getElementById('setCount').value;
-  
-      addExerciseRecord(selectedDate, exerciseType, exerciseCount, setCount);
-    }
-  
-  </script>
 </body>
+
 </html>

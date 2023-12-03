@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/7111c58be9.js" crossorigin="anonymous"></script>
+    <script src="getinfo.js"></script>
     <link type="text/css" rel="stylesheet" href="main.css">
     <title>Document</title>
 </head>
@@ -19,9 +20,26 @@
         </ul>
 
         <div class="log">
-            <a href="login.html">로그인</a>
-            <a href="login.html">회원가입</a>
+            <div id="userInfo"></div>
         </div>
     </div>
+    <script>
+        function checkLoginStatus() {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // 로그인 되어 있음
+        document.getElementById("userInfo").innerHTML = "안녕하세요, " + user.displayName + "님!";
+      } else {
+        // 로그인 되어 있지 않음
+        document.getElementById("userInfo").innerHTML = "로그인이 필요합니다. <a href='login.html'>로그인 페이지로 이동</a>";
+      }
+    });
+  }
+
+  // 페이지 로딩 시 로그인 상태 확인
+  window.onload = function() {
+    checkLoginStatus();
+  };
+    </script>
 </body>
 </html>

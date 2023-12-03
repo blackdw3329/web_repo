@@ -13,11 +13,12 @@
   box-sizing: border-box;
 }
  .nav3 {
+    border-radius: 30px;
     width: 100%;
     position: relative;
     text-align: center;
     font-family: '궁서체';
-    background-color: #fff;
+    background-color:   rgba(255, 182, 182, 0.445);
   }
   
   .nav3>a img {
@@ -54,7 +55,7 @@
   .nav3>ul li a {
     text-decoration-line: none;
     font-size: 20px;
-    color: blueviolet
+    color: #4C0805;
   }
 
   .log a {

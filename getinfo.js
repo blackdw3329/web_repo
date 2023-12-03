@@ -19,6 +19,7 @@ auth.onAuthStateChanged((user) => {
         // 로그인 되어있을 경우
         document.getElementById('userStatus').innerText = `현재 로그인된 사용자: ${user.email}`;
         loadExerciseRecords(user.uid);
+        
     } else {
         // 로그인 안되어있을때
         document.getElementById('userStatus').innerText = '로그인 상태가 아닙니다.';
@@ -28,7 +29,7 @@ auth.onAuthStateChanged((user) => {
 
 // 운동정보 데이터베이스에 전송 함수
 function saveExercise() {
-    const exerciseDate = selectedDate;
+    const exerciseDate = today.toString();
     const exerciseType = document.getElementById('exerciseType').value;
     const exerciseOther = document.getElementById('exerciseOther').value;
 
