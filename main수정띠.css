@@ -17,51 +17,6 @@ body {
   padding: 4px 8px;
   box-sizing: border-box;
 }
- .nav3 {
-    border-radius: 30px;
-    width: 100%;
-    position: relative;
-    text-align: center;
-    font-family: '궁서체';
-    background-color:   rgba(255, 182, 182, 0.445);
-  }
-  
-  .nav3>a img {
-    line-height: 80px;
-    display: block;
-    height: 150px;
-    position: absolute;
-    left: 30px;
-    text-decoration-line: none;
-  }
-  .nav3>div {
-    padding: 0 20px;
-    height: 30px;
-    position: absolute;
-    right: 30px;
-    top: 40%;
-    transform: translateY(-15px);
-    border: 2px solid #fff;
-    border-radius: 30px;
-    text-decoration-line: none;
-  
-  }
-  .nav3>ul {
-    display: inline-block;
-    text-decoration-line: none;
-  
-  }
-  .nav3>ul li{
-    float: left;
-    line-height: 100px;  
-    padding: 10px 80px;
-    list-style-type: none;
-  }
-  .nav3>ul li a {
-    text-decoration-line: none;
-    font-size: 20px;
-    color: #4C0805;
-  }
 
 .nav3 {
   background: -moz-linear-gradient(top, #FFDADA 0%, #F7FFFC 100%);
@@ -71,7 +26,7 @@ body {
   position: fixed;
   text-align: center;
   background-color: rgb(255, 255, 255)a;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif; /* 폰트 설정 추가 */
   z-index: 1000;
 }
 .nav3>a img {
@@ -109,16 +64,12 @@ body {
 
 .nav3>ul li a {
   text-decoration-line: none;
-  text-decoration-color: white;
   font-size: 20px;
   color: rgb(241, 16, 0);
   transition: text-decoration 0.5s ease-out;
 }
 .menu4 li:hover a{
   text-decoration: underline;
-  text-underline-position: under;
-  line-height: 80px;
-  bottom: 2px;
   text-decoration: underline red;
 }
 .nav3::before {
@@ -128,7 +79,7 @@ body {
   height: 0.2px;
   bottom: 0;
   left: 0;
-  background-color: red;
+  background-color: red; /* 밑줄 색상 설정 */
   transform: scaleX(0);
   transform-origin: bottom right;
   transition: transform 0.5s ease;
@@ -150,11 +101,11 @@ body {
 .log a {
   text-decoration-line: none;
   font-size: 15px;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif; /* 폰트 설정 추가 */
   color: rgb(88, 7, 1);
 }
 
 .image-container:hover img {
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
+  transform: scale(1.1); /* 확대 비율 조절 가능 */
+  transition: transform 0.3s ease; /* 부드러운 애니메이션을 위한 transition 설정 */
 }

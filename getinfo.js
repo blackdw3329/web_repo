@@ -73,3 +73,33 @@ function loadExerciseRecords(userUid) {
             console.error('운동 기록 불러오기 중 오류 발생: ', error);
         });
 }
+
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // 사용자가 로그인한 경우
+      displayUserInfo(user);
+    } else {
+      // 사용자가 로그인하지 않은 경우
+      displayLoginButton();
+    }
+  });
+
+  // 사용자 정보 출력 함수
+  function displayUserInfo(user) {
+    const thatDiv = document.getElementById('that');
+    thatDiv.innerHTML = `${user.email}으로 로그인 되어있습니다.`;
+    // 여기에서 추가적인 사용자 정보를 표시할 수 있습니다.
+  }
+
+  // 로그인 버튼 출력 함수
+  function displayLoginButton() {
+    const thatDiv = document.getElementById('that');
+    const loginButton = document.createElement('button');
+    loginButton.textContent = '로그인 하러가기';
+    loginButton.addEventListener('click', () => {
+      // 로그인 페이지로 이동하는 코드
+      window.location.href = 'login.html';
+    });
+
+    thatDiv.appendChild(loginButton);
+  }
