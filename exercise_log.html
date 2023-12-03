@@ -164,6 +164,8 @@ function saveExercise() {
     const exerciseDate = getSelectedDate();
     const exerciseType = document.getElementById('exerciseType').value;
     const exerciseOther = document.getElementById('exerciseOther').value;
+    const exerciseCount = document.getElementById('exerciseCount').value;
+    const exerciseWeight = document.getElementById('exerciseWeight').value;
 
     // 사용자 uid 얻어오기
     const user = auth.currentUser;
@@ -173,7 +175,9 @@ function saveExercise() {
         // 사용자 별 컬렉션에 데이터 저장
         db.collection('users').doc(userUid).collection('exercise').doc(exerciseDate).set({
             type: exerciseType,
-            other: exerciseOther
+            setcont: exerciseOther,
+            count: exerciseCount,
+            weight: exerciseWeight
         })
         .then(() => {
             console.log('운동 기록 추가 성공');
@@ -225,7 +229,8 @@ function loadExerciseRecords() {;
 
                         const exerciseData = doc.data();
                         const listItem = document.createElement('li');
-                        listItem.innerHTML = `종류: ${exerciseData.type}, <br>기간: ${exerciseData.other}분<br><br>`;
+                        listItem.innerHTML = `종류: ${exerciseData.type}, <br>개수: ${exerciseData.count} 
+                            <br>세트 수: ${exerciseData.setcont} <br>중량: ${exerciseData.weight}kg<br><br>`;
                         exerciseList.appendChild(listItem);
                     } else {
                         console.log('선택한 날짜에 대한 운동 기록이 없습니다.');
@@ -421,7 +426,10 @@ function loadExerciseRecords() {;
   
           <label for="exercisOther"><br>세트 수:</label>
           <input type="number" id="exerciseOther"><br>  
-  
+          
+          <label for="exercisWeight"><br>중량(kg) :</label>
+          <input type="number" id="exerciseWeight"><br>  
+          
           <button id="saveExerciseButton" onclick="saveExercise()">운동 기록</button>
 
           <h3>저장된 운동 기록</h3>
