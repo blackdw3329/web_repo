@@ -17,8 +17,7 @@ body {
   padding: 4px 8px;
   box-sizing: border-box;
 }
- .nav3 {
-    border-radius: 30px;
+ .nav3 {  
     width: 100%;
     position: relative;
     text-align: center;
@@ -84,16 +83,20 @@ body {
 }
 
 .nav3>div {
-  padding: 0 20px;
-  height: 30px;
+  padding: 0 10px;
+  height: 24px;
   position: absolute;
   right: 30px;
   top: 40%;
   transform: translateY(-15px);
   border: 2px solid #fff;
-  border-radius: 30px;
+  border-radius: 10px;
   text-decoration-line: none;
 }
+.nav3>div:hover {
+  border: 2px solid rgba(255, 50, 50, 0.39);
+}
+
 
 .nav3>ul {
   display: inline-block;
@@ -109,12 +112,12 @@ body {
 
 .nav3>ul li a {
   text-decoration-line: none;
-  text-decoration-color: white;
+  text-decoration-color: #FFDADA;
   font-size: 20px;
   color: rgb(241, 16, 0);
   transition: text-decoration 0.5s ease-out;
 }
-.menu4 li:hover a{
+.menu4 li a:hover{
   text-decoration: underline;
   text-underline-position: under;
   line-height: 80px;
@@ -153,7 +156,13 @@ body {
   font-family: 'Noto Sans KR', sans-serif;
   color: rgb(88, 7, 1);
 }
-
+.log a {
+  text-decoration-line: none;
+  text-decoration-color: white;
+  font-size: 15px;
+  color: rgb(241, 16, 0);
+  transition: text-decoration 0.5s ease-out;
+}
 .image-container:hover img {
   transform: scale(1.1);
   transition: transform 0.3s ease;

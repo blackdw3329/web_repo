@@ -10,6 +10,7 @@
     <style>
         .map-container
         {
+            position: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,13 +22,41 @@
             margin: 0;
             font-family: "여기어때 잘난체";
         }
+        .iframe-div {
+            position: pixed;
+        }
         iframe{
             height: 500px;
             width: 900px;
-            margin-left: -30%;
-            margin-top: 6%;
+            margin-left: -50%;
+            margin-top: 10%;
             display: block;
         }
+        .rounded-box {
+            position: relative;
+            width: 300px;
+            height: 3000px;
+            background-color: #f0f0f0;
+            color: black;
+            border-radius: 15px;
+            padding: 20px;
+            top: 250px;
+            left: 800px;
+      }
+
+      .title-area {
+            position: absolute;
+            top: 0px; /* 위쪽 여백을 더 크게 조절 */
+            left: 0;
+            width: 94%;
+            height: 50px;
+            background-color: #3498db;
+            padding: 10px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            color: #0a0a0a;
+            font-weight: bold;
+      }
     </style>
 </head>
 <body>
@@ -42,12 +71,38 @@
         </ul>
 
         <div class="log">
-            <a href="login.html">로그인</a>
+            <a href="login.html">로그인/</a>
             <a href="login.html">회원가입</a>
         </div>
     </div>
         <div class="map-container">
             <iframe src="exercise_log.html" allowfullscreen frameborder="0" scrolling="no"></iframe>
         </div>
-</body>
+        <div class="memori-container">
+        <div class="rounded-box">
+            <div class="title-area">
+              <!-- 운동 정보 저장 --><br><br><br>
+              <label for="exerciseType">운동종류:</label>
+              <select name="exerciseType" id="exerciseType">
+                <option value="exercise1" selected>exercise1</option>
+                <option value="exercise2">exercise2</option>
+                <option value="exercise3">exercise3</option>
+                <option value="exercise4">exercise4</option>
+              <select><br>
+        
+                <label for="exerciseCount">운동 개수:</label>
+                <input type="text" id="exerciseCount"><br>
+        
+                <label for="exercisOther">다른 옵션:</label>
+                <input type="number" id="exerciseOther"><br>  
+        
+                <button onclick="saveExercise()">운동 기록 저장</button>
+                <!-- 운동정보 출력 -->
+                <h3>저장된 운동 기록</h3>
+                <ul id="exerciseList"></ul>
+                <h5 id="userStatus"></h5>
+            </div>
+          </div>
+        </div>
+    </body>
 </html>

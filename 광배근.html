@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="main수정띠.css" type="text/css" rel="stylesheet">
+    <link href="main.css" type="text/css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="근육.css">
-    <script src="getinfo.js></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+    <script src="getinfo.js"></script>
     <title>광배근</title>
+    <style>
+        #that{
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
     <div class="nav3">
@@ -19,7 +27,10 @@
             <li><a href="map.html"><b>근처 헬스장</b></a></li>
         </ul>
 
-        <div id="that"></div>
+        <div class="log">
+            <a href="login.html"><b>로그인 / </b></a>
+            <a href="login.html"><b>회원가입</b></a>
+        </div>
     </div>
     <div class="container">
         <div class="image-container">
@@ -40,6 +51,51 @@
             <img src="https://img.youtube.com/vi/xgCkUZgMEUc/mqdefault.jpg">
         </a>
     </div>
+    <br><br><br><br>
+    <script>
+    const auth = firebase.auth();
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAMP0vxS4Z0okn_xHuVLXnqSUMUM_1rDro",
+        authDomain: "wlogin-4aa10.firebaseapp.com",
+        databaseURL: "https://wlogin-4aa10-default-rtdb.firebaseio.com",
+        projectId: "wlogin-4aa10",
+        storageBucket: "wlogin-4aa10.appspot.com",
+        messagingSenderId: "1042862838801",
+        appId: "1:1042862838801:web:a3b552af9131d5b3808db0",
+        measurementId: "G-0H986GY8W3"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+        // 로그인 확인
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                displayUserInfo(user);
+            } else {
+                displayLoginButton();
+            }
+        });
+
+        // 사용자 정보 출력 함수
+        function displayUserInfo(user) {
+            const thatDiv = document.getElementById('that');
+            thatDiv.textContent = `${user.email}으로 로그인 되어있습니다.`;
+            // 여기에서 추가적인 사용자 정보를 표시할 수 있습니다.
+        }
+
+        // 로그인 버튼 출력 함수
+        function displayLoginButton() {
+            const thatDiv = document.getElementById('that');
+            const loginButton = document.createElement('button');
+            loginButton.textContent = '로그인 하러가기';
+            loginButton.addEventListener('click', () => {
+                // 로그인 페이지로 이동하는 코드
+                window.location.href = 'login.html';
+            });
+
+            thatDiv.appendChild(loginButton);
+        }
+    </script>
 </body>
 
 </html>

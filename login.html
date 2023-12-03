@@ -29,7 +29,7 @@
             <h1>회원가입</h1>
             <div> 사용자의 이메일: <input type="email" id="signUpBotton" /> </div>
             <div> 비밀번호 설정: <input type="password" id="signUpPassword" /> </div>
-            <button type="submit" id="signUpButton">회원가입 하기</button>
+            <button type="submit" id="goTosignUp">회원가입 하기</button>
             <button type="button" id="goToLogin">로그인 하러 가기</button>
             <p id="signUpMessage"></p>
         </form>
@@ -84,7 +84,7 @@
                 });
         });
 
-        document.getElementById('signUpButton').addEventListener('click', (event) => {
+        document.getElementById('goTosignUp').addEventListener('click', (event) => {
             event.preventDefault();
             const signUpemail = document.getElementById('signUpBotton').value;
             const signUppassword = document.getElementById('signUpPassword').value;
