@@ -1,29 +1,57 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>달력</title>
     <style>
+        body{
+            background-color: white;
+        }
+
+        div{
+            width: 500px;
+            height: auto;
+        }
+        
         td {
             width: 50px;
             height: 50px;
         }
 
-        .Calendar { 
+        .Calendar {
+            background-color: white;
             text-align: center;
-            margin: 0 auto; 
+            width: 500px;
+            height: 514px;
+            border-radius: 7px;
         }
 
-        .Calendar>thead>tr:first-child>td { font-weight: bold; }
+        .Calendar>thead>tr:first-child>td {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
 
         .Calendar>thead>tr:last-child>td {
-            background-color: gray;
-            color: white;
-        }        
+            font-family: 'Questrial', sans-serif;
+            font-weight: 1000;    
+        }
 
-        .pastDay{ background-color: lightgray; }
+        .Calendar>tbody>tr>td>p {
+            font-family: 'Montserrat', sans-serif;
+            height: 45px;
+            width: 45px;
+            border-radius: 45px;
+            transition-duration: .2s;
+            line-height: 45px;
+            margin: 2.5px;
+            display: block;
+            text-align: center;
+        } 
 
         .today{            
-            background-color: #FFCA64;            
+            background-color: #3E85EF;            
+            color: #fff;
+            font-weight: 600;
             cursor: pointer;
         }
 
@@ -33,32 +61,145 @@
         }
 
         .futureDay.choiceDay, .today.choiceDay{            
-            background-color: #3E85EF;            
+            background: #F05650;
             color: #fff;
+            font-weight: 600;
             cursor: pointer;
         }
+
+        .rounded-box {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            background-color: #f0f0f0;
+            color: black;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: -450px;
+            margin-left: 600px;
+      }
+
+      .title-area {
+            position: absolute;
+            top: 0px; 
+            left: 0;
+            width: 94%;
+            height: 50px;
+            background-color: #3498db;
+            padding: 10px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            color: #0a0a0a;
+            font-weight: bold;
+            margin-bottom: 40px; 
+        }
+      
+
+      button#saveExerciseButton {
+            background-color: #3498db; 
+            color: white; 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-right: 100px;
+        }
+
+
+        button#saveExerciseButton:hover {
+            background-color: #3498db; 
+        }
+
+        .userStatus {
+        margin-bottom: 10px;
+    }
     </style>
 
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+      const firebaseConfig = {
+    apiKey: "AIzaSyAMP0vxS4Z0okn_xHuVLXnqSUMUM_1rDro",
+    authDomain: "wlogin-4aa10.firebaseapp.com",
+    databaseURL: "https://wlogin-4aa10-default-rtdb.firebaseio.com",
+    projectId: "wlogin-4aa10",
+    storageBucket: "wlogin-4aa10.appspot.com",
+    messagingSenderId: "1042862838801",
+    appId: "1:1042862838801:web:a3b552af9131d5b3808db0",
+    measurementId: "G-0H986GY8W3"
+};
 
-        firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
 
-        // Firestore 초기화
-        const db = firebase.firestore();
+//로그인 확인
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // 로그인 되어있을 경우
+        document.getElementById('userStatus').innerText = `현재 로그인된 사용자: ${user.email}`;
+        loadExerciseRecords(user.uid);
+        
+    } else {
+        // 로그인 안되어있을때
+        document.getElementById('userStatus').innerText = '로그인 상태가 아닙니다.';
+    }
+});
 
+
+// 운동정보 데이터베이스에 전송 함수
+function saveExercise() {
+    const exerciseDate = getSelectedDate();
+    const exerciseType = document.getElementById('exerciseType').value;
+    const exerciseOther = document.getElementById('exerciseOther').value;
+
+    // 사용자 uid 얻어오기
+    const user = auth.currentUser;
+    if (user) {
+        const userUid = user.uid;
+
+        // 사용자 별 컬렉션에 데이터 저장
+        db.collection('users').doc(userUid).collection('exercise').doc(exerciseDate).set({
+            type: exerciseType,
+            other: exerciseOther
+        })
+        .then(() => {
+            console.log('운동 기록 추가 성공');
+            // 저장 후 필요한 작업 수행
+        })
+        .catch((error) => {
+            console.error('운동 기록 추가 실패: ', error);
+        });
+    } else {
+        console.log('사용자가 로그인되어 있지 않습니다.');
+    }
+}
+
+// 로그인된 사용자의 운동정보 불러오는거 만들어보자(함수)
+function loadExerciseRecords(userUid) {
+    db.collection('users').doc(userUid).collection('exercise').get()
+        .then((querySnapshot) => {
+            const exerciseList = document.getElementById('exerciseList');
+            exerciseList.innerHTML = '';//리스트가 추가된 상태여서 초기화시켜줌
+
+            querySnapshot.forEach((doc) => {
+                const exerciseData = doc.data();
+                const listItem = document.createElement('li');
+                listItem.textContent = `일자: ${doc.id}, 종류: ${exerciseData.type}, 기간: ${exerciseData.other}분`;
+                exerciseList.appendChild(listItem);
+            });
+        })
+        .catch((error) => {
+            console.error('운동 기록 불러오기 중 오류 발생: ', error);
+        });
+}
     </script>
-
     <script>
         window.onload = function () { buildCalendar(); }    // 웹 페이지가 로드되면 buildCalendar 실행
 
@@ -68,55 +209,65 @@
 
         // 달력 생성 : 해당 달에 맞춰 테이블을 만들고, 날짜를 채워 넣는다.
         function buildCalendar() {
-
-            let firstDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth(), 1);     // 이번달 1일
-            let lastDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, 0);  // 이번달 마지막날
-
-            let tbody_Calendar = document.querySelector(".Calendar > tbody");
-            document.getElementById("calYear").innerText = nowMonth.getFullYear();             // 연도 숫자 갱신
-            document.getElementById("calMonth").innerText = leftPad(nowMonth.getMonth() + 1);  // 월 숫자 갱신
-
-            while (tbody_Calendar.rows.length > 0) {                        // 이전 출력결과가 남아있는 경우 초기화
-                tbody_Calendar.deleteRow(tbody_Calendar.rows.length - 1);
-            }
-
-            let nowRow = tbody_Calendar.insertRow();        // 첫번째 행 추가           
-
-            for (let j = 0; j < firstDate.getDay(); j++) {  // 이번달 1일의 요일만큼
-                let nowColumn = nowRow.insertCell();        // 열 추가
-            }
-
-            for (let nowDay = firstDate; nowDay <= lastDate; nowDay.setDate(nowDay.getDate() + 1)) {   // day는 날짜를 저장하는 변수, 이번달 마지막날까지 증가시키며 반복  
-
-                let nowColumn = nowRow.insertCell();        // 새 열을 추가하고
-                nowColumn.innerText = leftPad(nowDay.getDate());      // 추가한 열에 날짜 입력
-
             
-                if (nowDay.getDay() == 0) {                 // 일요일인 경우 글자색 빨강으로
-                    nowColumn.style.color = "#DC143C";
-                }
-                if (nowDay.getDay() == 6) {                 // 토요일인 경우 글자색 파랑으로 하고
-                    nowColumn.style.color = "#0000CD";
-                    nowRow = tbody_Calendar.insertRow();    // 새로운 행 추가
-                }
+        let firstDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth(), 1);     // 이번달 1일
+        let lastDate = new Date(nowMonth.getFullYear(), nowMonth.getMonth() + 1, 0);  // 이번달 마지막날
 
-                else if (nowDay.getFullYear() == today.getFullYear() && nowDay.getMonth() == today.getMonth() && nowDay.getDate() == today.getDate()) { // 오늘인 경우           
-                    nowColumn.className = "today";
-                    nowColumn.onclick = function () { choiceDate(this); }
-                }
-                else {                                      // 미래인 경우
-                    nowColumn.className = "futureDay";
-                    nowColumn.onclick = function () { choiceDate(this); }
-                }
-            }
+        let tbody_Calendar = document.querySelector(".Calendar > tbody");
+        document.getElementById("calYear").innerText = nowMonth.getFullYear();             // 연도 숫자 갱신
+        document.getElementById("calMonth").innerText = leftPad(nowMonth.getMonth() + 1);  // 월 숫자 갱신
+
+        while (tbody_Calendar.rows.length > 0) {                        // 이전 출력결과가 남아있는 경우 초기화
+            tbody_Calendar.deleteRow(tbody_Calendar.rows.length - 1);
         }
 
+        let nowRow = tbody_Calendar.insertRow(); // 첫 번째 행 추가
+
+        for (let j = 0; j < firstDate.getDay(); j++) {  // 이번달 1일의 요일만큼
+            let nowColumn = nowRow.insertCell();        // 열 추가
+        }
+
+        for (let nowDay = firstDate; nowDay <= lastDate; nowDay.setDate(nowDay.getDate() + 1)) {   // day는 날짜를 저장하는 변수, 이번달 마지막날까지 증가시키며 반복  
+            if (nowDay.getDay() === 0) { // 일요일인 경우
+                nowRow = tbody_Calendar.insertRow(); // 새로운 행 추가
+            }
+
+            let nowColumn = nowRow.insertCell();        // 새 열을 추가하고
+            nowColumn.innerText = leftPad(nowDay.getDate());      // 추가한 열에 날짜 입력
+
+            if (nowDay.getDay() == 0) {                 // 일요일인 경우 글자색 빨강으로
+                nowColumn.style.color = "#DC143C";
+            }
+            if (nowDay.getDay() == 6) {                 // 토요일인 경우 글자색 파랑으로 하고
+                nowColumn.style.color = "#0000CD";
+            }
+
+            if (
+                nowDay.getFullYear() == today.getFullYear() &&
+                nowDay.getMonth() == today.getMonth() &&
+                nowDay.getDate() == today.getDate()
+            ) { // 오늘인 경우
+                nowColumn.className = "today";
+                nowColumn.onclick = function () {
+                    choiceDate(this);
+                };
+            } else {
+                // 미래인 경우
+                nowColumn.className = "futureDay";
+                nowColumn.onclick = function () {
+                    choiceDate(this);
+                };
+            }
+        }
+    }
         // 날짜 선택
         function choiceDate(nowColumn) {
             if (document.getElementsByClassName("choiceDay")[0]) {                              // 기존에 선택한 날짜가 있으면
                 document.getElementsByClassName("choiceDay")[0].classList.remove("choiceDay");  // 해당 날짜의 "choiceDay" class 제거
             }
-            nowColumn.classList.add("choiceDay");           // 선택된 날짜에 "choiceDay" class 추가
+            nowColumn.classList.add("choiceDay"); 
+            var selectedDate = getSelectedDate();
+            console.log(selectedDate);          // 선택된 날짜에 "choiceDay" class 추가
         }
         
         function getSelectedDate() {
@@ -175,7 +326,7 @@
 
         // input값이 한자리 숫자인 경우 앞에 '0' 붙혀주는 함수
         function leftPad(value) {
-            if (value < 10) { 
+            if (value < 10) {
                 value = "0" + value;
                 return value;
             }
@@ -183,16 +334,18 @@
         }
     </script>
 </head>
+
 <body>
+    <div>
     <table class="Calendar">
         <thead>
             <tr>
-                <td onClick="prevCalendar();" style="cursor:pointer;">&#60;</td>
+                <td onClick="prevCalendar();" style="cursor:pointer;">⬅️</td>
                 <td colspan="5">
                     <span id="calYear"></span>년
                     <span id="calMonth"></span>월
                 </td>
-                <td onClick="nextCalendar();" style="cursor:pointer;">&#62;</td>
+                <td onClick="nextCalendar();" style="cursor:pointer;">➡️</td>
             </tr>
             <tr>
                 <td>일</td>
@@ -208,5 +361,30 @@
         <tbody>
         </tbody>
     </table>
+    </div>
+    <div class="rounded-box">
+      <div class="title-area">
+        <!-- 운동 정보 저장 --><br><br><br>
+        <label for="exerciseType">운동종류:</label>
+        <select name="exerciseType" id="exerciseType">
+          <option value="exercise1" selected>데드리프트</option><br>
+          <option value="exercise2">벤치프레스</option>
+          <option value="exercise3">스쿼트</option>
+        <select><br>
+  
+          <label for="exerciseCount"><br>운동 개수:</label>
+          <input type="text" id="exerciseCount"><br>
+  
+          <label for="exercisOther"><br>세트 수:</label>
+          <input type="number" id="exerciseOther"><br>  
+  
+          <button id="saveExerciseButton" onclick="saveExercise()">운동 기록</button>
+
+          <h3>저장된 운동 기록</h3>
+          <ul id="exerciseList"></ul>
+          <h5 class="userStatus" id="userStatus"></h5>
+      </div>
+    </div>
 </body>
+
 </html>
