@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>달력</title>
     <style>
@@ -71,11 +70,11 @@
             position: relative;
             width: 300px;
             height: 300px;
-            background-color: #f0f0f0;
+            background: linear-gradient(to bottom, #f0f0f0, #ffffff);
             color: black;
             border-radius: 15px;
             padding: 20px;
-            margin-top: -450px;
+            margin-top: -500px;
             margin-left: 600px;
       }
 
@@ -84,7 +83,7 @@
             top: 0px; 
             left: 0;
             width: 94%;
-            height: 50px;
+            height: 55px;
             background-color: #3498db;
             padding: 10px;
             border-top-left-radius: 15px;
@@ -117,27 +116,31 @@
         .userStatus {
         margin-bottom: 10px;
     }
+    #titleDate {
+        height: 80px;
+    }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+    <link href="main.css" type="text/css" rel="stylesheet">
 
     <script>
-      const firebaseConfig = {
-    apiKey: "AIzaSyAMP0vxS4Z0okn_xHuVLXnqSUMUM_1rDro",
-    authDomain: "wlogin-4aa10.firebaseapp.com",
-    databaseURL: "https://wlogin-4aa10-default-rtdb.firebaseio.com",
-    projectId: "wlogin-4aa10",
-    storageBucket: "wlogin-4aa10.appspot.com",
-    messagingSenderId: "1042862838801",
-    appId: "1:1042862838801:web:a3b552af9131d5b3808db0",
-    measurementId: "G-0H986GY8W3"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyAMP0vxS4Z0okn_xHuVLXnqSUMUM_1rDro",
+            authDomain: "wlogin-4aa10.firebaseapp.com",
+            databaseURL: "https://wlogin-4aa10-default-rtdb.firebaseio.com",
+            projectId: "wlogin-4aa10",
+            storageBucket: "wlogin-4aa10.appspot.com",
+            messagingSenderId: "1042862838801",
+            appId: "1:1042862838801:web:a3b552af9131d5b3808db0",
+            measurementId: "G-0H986GY8W3"
+        };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
 
 //로그인 확인
 auth.onAuthStateChanged((user) => {
@@ -145,6 +148,9 @@ auth.onAuthStateChanged((user) => {
         // 로그인 되어있을 경우
         document.getElementById('userStatus').innerText = `현재 로그인된 사용자: ${user.email}`;
         loadExerciseRecords(user.uid);
+        setInterval(() => {
+            loadExerciseRecords(user.uid);
+        }, 3000);  // 1000 ==> 1초
         
     } else {
         // 로그인 안되어있을때
@@ -171,6 +177,7 @@ function saveExercise() {
         })
         .then(() => {
             console.log('운동 기록 추가 성공');
+            location.reload()   
             // 저장 후 필요한 작업 수행
         })
         .catch((error) => {
@@ -182,23 +189,64 @@ function saveExercise() {
 }
 
 // 로그인된 사용자의 운동정보 불러오는거 만들어보자(함수)
-function loadExerciseRecords(userUid) {
-    db.collection('users').doc(userUid).collection('exercise').get()
-        .then((querySnapshot) => {
-            const exerciseList = document.getElementById('exerciseList');
-            exerciseList.innerHTML = '';//리스트가 추가된 상태여서 초기화시켜줌
+// function loadExerciseRecords(userUid) {
+//     db.collection('users').doc(userUid).collection('exercise').get()
+//         .then((querySnapshot) => {
+//             const exerciseList = document.getElementById('exerciseList');
+//             exerciseList.innerHTML = '';//리스트가 추가된 상태여서 초기화시켜줌
 
-            querySnapshot.forEach((doc) => {
-                const exerciseData = doc.data();
-                const listItem = document.createElement('li');
-                listItem.textContent = `일자: ${doc.id}, 종류: ${exerciseData.type}, 기간: ${exerciseData.other}분`;
-                exerciseList.appendChild(listItem);
-            });
-        })
-        .catch((error) => {
-            console.error('운동 기록 불러오기 중 오류 발생: ', error);
-        });
-}
+//             querySnapshot.forEach((doc) => {
+//                 const exerciseData = doc.data();
+//                 const listItem = document.createElement('li');
+//                 listItem.textContent = `일자: ${doc.id}, 종류: ${exerciseData.type}, 기간: ${exerciseData.other}분`;
+//                 exerciseList.appendChild(listItem);
+//             });
+//         })
+//         .catch((error) => {
+//             console.error('운동 기록 불러오기 중 오류 발생: ', error);
+//         });
+// }
+function loadExerciseRecords() {;
+    const selectedDate = getSelectedDate();
+
+    // 사용자 uid 얻어오기
+    const user = auth.currentUser;
+    if (user) {
+        const userUid = user.uid;
+
+        // 이 부분에서 selectedDate가 비어있는지 확인
+        if (selectedDate) {
+            // 선택한 날짜의 운동 기록 불러오기
+            db.collection('users').doc(userUid).collection('exercise').doc(selectedDate).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const exerciseList = document.getElementById('exerciseList');
+                        exerciseList.innerHTML = '';
+
+                        const exerciseData = doc.data();
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `종류: ${exerciseData.type}, <br>기간: ${exerciseData.other}분<br><br>`;
+                        exerciseList.appendChild(listItem);
+                    } else {
+                        console.log('선택한 날짜에 대한 운동 기록이 없습니다.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('운동 기록 불러오기 중 오류 발생: ', error);
+                });
+        } else {
+            console.log('날짜를 선택해주세요.');
+        }
+    } else {
+        console.log('사용자가 로그인되어 있지 않습니다.');
+    }
+}   
+        function loadDate() {
+            const selectedDate = getSelectedDate();
+            document.getElementById('titleDate').innerText  = `${selectedDate}의 운동정보`;
+        }
+
+
     </script>
     <script>
         window.onload = function () { buildCalendar(); }    // 웹 페이지가 로드되면 buildCalendar 실행
@@ -268,6 +316,8 @@ function loadExerciseRecords(userUid) {
             nowColumn.classList.add("choiceDay"); 
             var selectedDate = getSelectedDate();
             console.log(selectedDate);          // 선택된 날짜에 "choiceDay" class 추가
+
+            loadDate();
         }
         
         function getSelectedDate() {
@@ -308,10 +358,6 @@ function loadExerciseRecords(userUid) {
         }
     }
 
-    // 예시로 버튼 클릭 시 저장 기능을 호출하는 이벤트 핸들러
-    const saveButton = document.getElementById('saveButton');
-    saveButton.addEventListener('click', saveRecord);
-
 
         // 이전달 버튼 클릭
         function prevCalendar() {
@@ -325,18 +371,14 @@ function loadExerciseRecords(userUid) {
         }
 
         // input값이 한자리 숫자인 경우 앞에 '0' 붙혀주는 함수
-        function leftPad(value) {
-            if (value < 10) {
-                value = "0" + value;
-                return value;
-            }
-            return value;
+        function leftPad(value, length = 2) {
+            return String(value).padStart(length, '0');
         }
     </script>
 </head>
 
 <body>
-    <div>
+    <div class="Calendar-container">
     <table class="Calendar">
         <thead>
             <tr>
@@ -361,10 +403,12 @@ function loadExerciseRecords(userUid) {
         <tbody>
         </tbody>
     </table>
-    </div>
+</div>
     <div class="rounded-box">
       <div class="title-area">
-        <!-- 운동 정보 저장 --><br><br><br>
+        <br>
+        <div id="titleDate"></div>
+        
         <label for="exerciseType">운동종류:</label>
         <select name="exerciseType" id="exerciseType">
           <option value="exercise1" selected>데드리프트</option><br>

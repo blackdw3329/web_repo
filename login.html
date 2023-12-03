@@ -7,16 +7,42 @@
     <style>
         #container{
             text-align: center;
-            margin-top: 10%;
+            margin-top: 18%;
         }
+        .logo {
+            line-height: 80px;
+            display: block;
+            height: 150px;
+            position: absolute;
+            top: 120px;
+            left: 620px;
+            text-decoration-line: none;
+        }
+        form{
+            color: rgb(3, 3, 114);
+        }
+        #goTosignUp, #goToLogin, #signInButton, #goToSignUp {
+            background-color: #3498db; 
+            color: white; 
+            padding: 4px 10px; 
+            font-size: 15px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
     </style>
 </head>
 <body>
     <div id="container">
     <div id="loginContainer">
         <form>
-            <h1>로그인</h1>
-            <div> 이메일: <input type="email" id="signInBotton" /> </div>
+            <img src="logo.png" class="logo">
+            <h1 style="color: rgb(3, 3, 114);">로그인</h1>
+            <div> 이메일: <input type="email" id="signInEmail" /> </div>
             <div> 비밀번호: <input type="password" id="signInPassword" /> </div>
             <button type="submit" id="signInButton">로그인 하기</button>
             <button type="button" id="goToSignUp">회원가입 하러 가기</button>
@@ -26,12 +52,12 @@
 
     <div id="signUpContainer" style="display: none;">
         <form>
+            <img src="logo.png" class="logo">
             <h1>회원가입</h1>
-            <div> 사용자의 이메일: <input type="email" id="signUpBotton" /> </div>
+            <div> 사용자의 이메일: <input type="email" id="signUpEmail" /> </div>
             <div> 비밀번호 설정: <input type="password" id="signUpPassword" /> </div>
             <button type="submit" id="goTosignUp">회원가입 하기</button>
             <button type="button" id="goToLogin">로그인 하러 가기</button>
-            <p id="signUpMessage"></p>
         </form>
     </div>
     </div>
@@ -61,18 +87,15 @@
 
         document.getElementById('signInButton').addEventListener('click', (event) => {
             event.preventDefault();
-            const signInemail = document.getElementById('signInBotton').value;
+            const signInemail = document.getElementById('signInEmail').value;
             const signInpassword = document.getElementById('signInPassword').value;
 
             signInWithEmailAndPassword(auth, signInemail, signInpassword)
                 .then((userCredential) => {
                     console.log(userCredential);
-                    
                     const user = userCredential.user;
-                    alert("로그인 성공");
                     signUpMessage.textContent = '';
                     history.back();
-                    
                 })
                 .catch((error) => {
                     console.log('로그인 실패');
@@ -86,7 +109,7 @@
 
         document.getElementById('goTosignUp').addEventListener('click', (event) => {
             event.preventDefault();
-            const signUpemail = document.getElementById('signUpBotton').value;
+            const signUpemail = document.getElementById('signUpEmail').value;
             const signUppassword = document.getElementById('signUpPassword').value;
             
             createUserWithEmailAndPassword(auth, signUpemail, signUppassword)

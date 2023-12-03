@@ -85,6 +85,7 @@ body {
 .nav3>div {
   padding: 0 10px;
   height: 24px;
+  width: 130px;
   position: absolute;
   right: 30px;
   top: 40%;
