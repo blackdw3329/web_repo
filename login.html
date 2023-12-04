@@ -91,7 +91,7 @@
                     console.log(userCredential);
                     const user = userCredential.user;
                     console.log("로그인 시도"+user);
-                    history.bakc();
+                    history.back();
                 })
                 .catch((error) => {
                     console.log('로그인 실패');
@@ -109,10 +109,8 @@
             createUserWithEmailAndPassword(auth, signUpemail, signUppassword)
                 .then((userCredential) => {
                     console.log(userCredential);
-                    
                     const user = userCredential.user;
                     alert("회원가입 성공");
-                    loginMessage.textContent = '';
                     location.replace("login.html")
                     
                 })
