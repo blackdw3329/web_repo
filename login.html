@@ -44,7 +44,6 @@
             <div> 비밀번호: <input type="password" id="signInPassword" /> </div>
             <button type="submit" id="signInButton">로그인 하기</button>
             <button type="button" id="goToSignUp">회원가입 하러 가기</button>
-            <p id="loginMessage"></p>
         </form>
     </div>
 
@@ -80,8 +79,7 @@
 
         const loginContainer = document.getElementById('loginContainer');
         const signUpContainer = document.getElementById('signUpContainer');
-        const loginMessage = document.getElementById('loginMessage');
-        const signUpMessage = document.getElementById('signUpMessage');
+
 
         document.getElementById('signInButton').addEventListener('click', (event) => {
             event.preventDefault();
@@ -92,7 +90,6 @@
                 .then((userCredential) => {
                     console.log(userCredential);
                     const user = userCredential.user;
-                    signUpMessage.textContent = '';
                     console.log("로그인 시도"+user);
                 })
                 .catch((error) => {
@@ -100,8 +97,6 @@
                     const errorCode = error.code;
                     const errorMessage = error.message;
                     alert('로그인 실패. 다시시도해 주세요');
-                    signUpMessage.textContent = '';
-                    
                 });
         });
 
@@ -125,7 +120,6 @@
                     const errorCode = error.code;
                     const errorMessage = error.message;
                     alert('회원가입 실패. 다시시도해 주세요');
-                    loginMessage.textContent = '';
                     
                 });
         });
