@@ -93,6 +93,7 @@
                     console.log(userCredential);
                     const user = userCredential.user;
                     signUpMessage.textContent = '';
+                    console.log("로그인 시도"+user);
                     history.back();
                 })
                 .catch((error) => {
