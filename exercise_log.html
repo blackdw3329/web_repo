@@ -234,6 +234,7 @@ function loadExerciseRecords() {;
                         exerciseList.appendChild(listItem);
                     } else {
                         console.log('선택한 날짜에 대한 운동 기록이 없습니다.');
+                        exerciseList.innerHTML = '';
                     }
                 })
                 .catch((error) => {
@@ -248,7 +249,7 @@ function loadExerciseRecords() {;
 }   
         function loadDate() {
             const selectedDate = getSelectedDate();
-            document.getElementById('titleDate').innerText  = `${selectedDate}의 운동정보`;
+            document.getElementById('titleDate').innerText  = `${selectedDate}`;
         }
 
 
