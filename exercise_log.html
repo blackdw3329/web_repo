@@ -229,7 +229,7 @@ function loadExerciseRecords() {;
 
                         const exerciseData = doc.data();
                         const listItem = document.createElement('li');
-                        listItem.innerHTML = `종류: ${exerciseData.type}, <br>개수: ${exerciseData.count} 
+                        listItem.innerHTML = `종류: ${exerciseData.type} <br>개수: ${exerciseData.count} 
                             <br>세트 수: ${exerciseData.setcont} <br>중량: ${exerciseData.weight}kg<br><br>`;
                         exerciseList.appendChild(listItem);
                     } else {
