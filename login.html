@@ -91,6 +91,7 @@
                     console.log(userCredential);
                     const user = userCredential.user;
                     console.log("로그인 시도"+user);
+                    history.bakc();
                 })
                 .catch((error) => {
                     console.log('로그인 실패');
