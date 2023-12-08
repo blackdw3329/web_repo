@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="main.css" type="text/css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="근육.css">
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
-    <script src="getinfo.js"></script>
     <title>광배근</title>
     <style>
         #that{
@@ -22,14 +18,14 @@
             <img src="logo.png">
         </a>
         <ul class="menu4">
-            <li><a href="muscle.html"><b>운동정보</b></a></li>
-            <li><a href="health-memori.html"><b>운동기록</b></a></li>
-            <li><a href="map.html"><b>근처 헬스장</b></a></li>
+            <li><a href="muscle.html">운동정보</a></li>
+            <li><a href="health-memori.html">운동기록 </a></li>
+            <li><a href="map.html">근처 헬스장 </a></li>
         </ul>
 
         <div class="log">
-            <a href="login.html"><b>로그인 / </b></a>
-            <a href="login.html"><b>회원가입</b></a>
+            <a href="login.html">로그인 /  </a>
+            <a href="login.html">회원가입 </a>
         </div>
     </div>
     <div class="container">
@@ -38,9 +34,9 @@
         </div>
         <div class="info-container">
             <h2>광배근</h2>
-            <p><b>광배근은 등의 가장 넓은 부분을 차지하는 근육이다. 늘어나면서 뻣뻣해지면 등이 앞으로 굽게 만들고, 어깨를 아프게 만든다. 이 근육을 잘 이완시키면 등이 펴지는 것과 동시에 팔을 잘 들어올릴 수 있게 된다.</b></p>
+            <p>광배근은 등의 가장 넓은 부분을 차지하는 근육이다. 늘어나면서 뻣뻣해지면 등이 앞으로 굽게 만들고, 어깨를 아프게 만든다. 이 근육을 잘 이완시키면 등이 펴지는 것과 동시에 팔을 잘 들어올릴 수 있게 된다. </p>
             <h2>운동법</h2>
-            <p><b> 광배근은 위에서 아래로 잡아당기는 동작에 작용하며 광배근를 공략하기 위한 운동으로는 풀업 또는 어시스트 풀업과 머신 랫 풀 다운이 있다.</b> </p>
+            <p> 광배근은 위에서 아래로 잡아당기는 동작에 작용하며 광배근를 공략하기 위한 운동으로는 풀업 또는 어시스트 풀업과 머신 랫 풀 다운이 있다.  </p>
         </div>
     </div>
     <div class="text-under-container">
@@ -52,50 +48,6 @@
         </a>
     </div>
     <br><br><br><br>
-    <script>
-    const auth = firebase.auth();
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyAMP0vxS4Z0okn_xHuVLXnqSUMUM_1rDro",
-        authDomain: "wlogin-4aa10.firebaseapp.com",
-        databaseURL: "https://wlogin-4aa10-default-rtdb.firebaseio.com",
-        projectId: "wlogin-4aa10",
-        storageBucket: "wlogin-4aa10.appspot.com",
-        messagingSenderId: "1042862838801",
-        appId: "1:1042862838801:web:a3b552af9131d5b3808db0",
-        measurementId: "G-0H986GY8W3"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-        // 로그인 확인
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                displayUserInfo(user);
-            } else {
-                displayLoginButton();
-            }
-        });
-
-        // 사용자 정보 출력 함수
-        function displayUserInfo(user) {
-            const thatDiv = document.getElementById('that');
-            thatDiv.textContent = `${user.email}으로 로그인 되어있습니다.`;
-            // 여기에서 추가적인 사용자 정보를 표시할 수 있습니다.
-        }
-
-        // 로그인 버튼 출력 함수
-        function displayLoginButton() {
-            const thatDiv = document.getElementById('that');
-            const loginButton = document.createElement('button');
-            loginButton.textContent = '로그인 하러가기';
-            loginButton.addEventListener('click', () => {
-                // 로그인 페이지로 이동하는 코드
-                window.location.href = 'login.html';
-            });
-
-            thatDiv.appendChild(loginButton);
-        }
-    </script>
 </body>
 
 </html>

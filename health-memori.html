@@ -8,29 +8,31 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
     <script src="getinfo.js"></script>
     <style>
-        .map-container
-        {
+        .map-container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100%;
             margin: 0;
         }
-        body
-        {
+
+        body {
             margin: 0;
             font-family: "여기어때 잘난체";
         }
+
         .iframe-div {
             position: pixed;
         }
-        iframe{
+
+        iframe {
             height: 500px;
             width: 1000px;
             margin-left: 0%;
             margin-top: 15%;
             display: block;
         }
+
         .rounded-box {
             position: relative;
             width: 300px;
@@ -41,11 +43,12 @@
             padding: 20px;
             top: 250px;
             left: 800px;
-      }
+        }
 
-      .title-area {
+        .title-area {
             position: absolute;
-            top: 0px; /* 위쪽 여백을 더 크게 조절 */
+            top: 0px;
+            /* 위쪽 여백을 더 크게 조절 */
             left: 0;
             width: 94%;
             height: 50px;
@@ -55,9 +58,10 @@
             border-top-right-radius: 15px;
             color: #0a0a0a;
             font-weight: bold;
-      }
+        }
     </style>
 </head>
+
 <body>
     <div class="nav3">
         <a href="index.html">
@@ -74,8 +78,8 @@
             <a href="login.html">회원가입</a>
         </div>
     </div>
-        <div class="map-container">
-            <iframe src="exercise_log.html" allowfullscreen frameborder="0" scrolling="no"></iframe>
-        </div>
-    </body>
+    <div class="map-container">
+        <iframe src="exercise_log.html" allowfullscreen frameborder="0" scrolling="no"></iframe>
+    </div>
+</body>
 </html>

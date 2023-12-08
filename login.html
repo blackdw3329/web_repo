@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-        #container{
+        #container {
             text-align: center;
             margin-top: 14%;
         }
+
         .logo {
             line-height: 0px;
             display: block;
@@ -16,47 +18,52 @@
             position: relative;
             margin: auto;
         }
-        form{
+
+        form {
             color: rgb(3, 3, 114);
         }
-        #goTosignUp, #goToLogin, #signInButton, #goToSignUp {
-            background-color: #3498db; 
-            color: white; 
-            padding: 4px 10px; 
-            font-size: 15px; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
+
+        #goTosignUp,
+        #goToLogin,
+        #signInButton,
+        #goToSignUp {
+            background-color: #3498db;
+            color: white;
+            padding: 4px 10px;
+            font-size: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
             transition: background-color 0.3s;
             margin-top: 10px;
             margin-bottom: 10px;
         }
-        
     </style>
 </head>
+
 <body>
     <div id="container">
-    <div id="loginContainer">
-        <form>
-            <img src="logo.png" class="logo">
-            <h1 style="color: rgb(3, 3, 114);">로그인</h1>
-            <div> 이메일: <input type="email" id="signInEmail" /> </div>
-            <div> 비밀번호: <input type="password" id="signInPassword" /> </div>
-            <button type="submit" id="signInButton">로그인 하기</button>
-            <button type="button" id="goToSignUp">회원가입 하러 가기</button>
-        </form>
-    </div>
+        <div id="loginContainer">
+            <form>
+                <img src="logo.png" class="logo">
+                <h1 style="color: rgb(3, 3, 114);">로그인</h1>
+                <div> 이메일: <input type="email" id="signInEmail" /> </div>
+                <div> 비밀번호: <input type="password" id="signInPassword" /> </div>
+                <button type="submit" id="signInButton">로그인 하기</button>
+                <button type="button" id="goToSignUp">회원가입 하러 가기</button>
+            </form>
+        </div>
 
-    <div id="signUpContainer" style="display: none;">
-        <form>
-            <img src="logo.png" class="logo">
-            <h1>회원가입</h1>
-            <div> 사용자의 이메일: <input type="email" id="signUpEmail" /> </div>
-            <div> 비밀번호 설정: <input type="password" id="signUpPassword" /> </div>
-            <button type="submit" id="goTosignUp">회원가입 하기</button>
-            <button type="button" id="goToLogin">로그인 하러 가기</button>
-        </form>
-    </div>
+        <div id="signUpContainer" style="display: none;">
+            <form>
+                <img src="logo.png" class="logo">
+                <h1>회원가입</h1>
+                <div> 사용자의 이메일: <input type="email" id="signUpEmail" /> </div>
+                <div> 비밀번호 설정: <input type="password" id="signUpPassword" /> </div>
+                <button type="submit" id="goTosignUp">회원가입 하기</button>
+                <button type="button" id="goToLogin">로그인 하러 가기</button>
+            </form>
+        </div>
     </div>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
@@ -64,14 +71,14 @@
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
         const firebaseConfig = {
-          apiKey: "AIzaSyAMP0vxS4Z0okn_xHuVLXnqSUMUM_1rDro",
-          authDomain: "wlogin-4aa10.firebaseapp.com",
-          projectId: "wlogin-4aa10",
-          storageBucket: "wlogin-4aa10.appspot.com",
-          messagingSenderId: "1042862838801",
-          appId: "1:1042862838801:web:2411a301ef79ac17808db0"
+            apiKey: "AIzaSyAMP0vxS4Z0okn_xHuVLXnqSUMUM_1rDro",
+            authDomain: "wlogin-4aa10.firebaseapp.com",
+            projectId: "wlogin-4aa10",
+            storageBucket: "wlogin-4aa10.appspot.com",
+            messagingSenderId: "1042862838801",
+            appId: "1:1042862838801:web:2411a301ef79ac17808db0"
         };
-      
+
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
 
@@ -90,7 +97,7 @@
                 .then((userCredential) => {
                     console.log(userCredential);
                     const user = userCredential.user;
-                    console.log("로그인 시도"+user);
+                    console.log("로그인 시도" + user);
                     history.back();
                 })
                 .catch((error) => {
@@ -105,21 +112,21 @@
             event.preventDefault();
             const signUpemail = document.getElementById('signUpEmail').value;
             const signUppassword = document.getElementById('signUpPassword').value;
-            
+
             createUserWithEmailAndPassword(auth, signUpemail, signUppassword)
                 .then((userCredential) => {
                     console.log(userCredential);
                     const user = userCredential.user;
                     alert("회원가입 성공");
                     location.replace("login.html")
-                    
+
                 })
                 .catch((error) => {
                     console.log('회원가입 실패');
                     const errorCode = error.code;
                     const errorMessage = error.message;
                     alert('회원가입 실패. 다시시도해 주세요');
-                    
+
                 });
         });
 
@@ -134,4 +141,5 @@
         });
     </script>
 </body>
+
 </html>

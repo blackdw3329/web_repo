@@ -1,43 +1,42 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="main.css" type="text/css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/7111c58be9.js" crossorigin="anonymous"></script>
-    <title>ㅤ</title>
+    <title>health365</title>
     <style>
-        span
-        {
+        span {
             font-size: 40px;
             font-weight: 600;
             color: red;
         }
-        body 
-        {
+
+        body {
             margin: 0;
             overflow: hidden;
             font-family: "여기어때 잘난체";
             background-color: gray;
         }
-        .image-container
-        {
+
+        .image-container {
             width: 100%;
             height: 100%;
             position: absolute;
             background: url(health_image2.avif) center/cover;
-        }#slider-container 
-        {
+        }
+
+        #slider-container {
             width: 100vw;
             height: 150vh;
             overflow: hidden;
             position: relative;
         }
 
-        .slide 
-        {
+        .slide {
             width: 100%;
             height: 100%;
             position: absolute;
@@ -46,8 +45,7 @@
             transition: transform 1s ease-in-out;
         }
 
-        .text-container 
-        {
+        .text-container {
             position: absolute;
             top: 40%;
             left: 50%;
@@ -59,19 +57,24 @@
             font-size: 20px;
             text-shadow: 2px 2px 2px black;
         }
+
         #slide1 { background: url('healthpic1.jpg') center/cover; }
+
         #slide2 { background: url('healthpic2.jpg') center/cover; }
+
         #slide3 { background: url('healthpic3.jpg') center/cover; }
 
-        #healthword{
+        #healthword {
             color: black;
             text-shadow: 2px 2px 5px gray;
         }
-        #logo{
+
+        #logo {
             width: 200px;
         }
     </style>
 </head>
+
 <body>
     <div class="nav3">
         <a href="index.html">
@@ -88,7 +91,7 @@
             <a href="login.html">회원가입</a>
         </div>
     </div>
-<!-- 
+    <!-- 
 명언
 나는 포기했을 때의 기분을 이미 알고 있다. 
 그래서 포기하지 않았을 때에 무슨 일이 일어날지 알고 싶다. -네일라 레이
@@ -103,50 +106,49 @@
 이것을 멈추기가 어려울 것이다. -에린 그레이
 
 -->
-        <div id="slider-container">
-            <div id="slide1" class="slide">
-                <div class="text-container">
-                    <img id="logo" src="logo.png">
-                    <p>우리가 늙어서 운동을 안하는것이 아니라, <br>
-                         운동을 그만두기 때문에 늙는 것이다</p>
-                    <!-- 케너스 쿠퍼 -->
-                </div>
-            </div>
-            <div id="slide2" class="slide">
-                <div class="text-container">
-                    <img id="logo" src="logo.png">
-                    <p>일단 규칙적으로 운동하면,<br>
-                        이것을 멈추기가 어려울 것이다.</p>
-                </div>
-            </div>
-            <div id="slide3" class="slide">
-                <div class="text-container">
-                    <img id="logo" src="logo.png">
-                    <p id="healthword">하고자 하는 자는 방법을 찾고,<br>
-                        하기 싫어하는 자는 핑계를 찾는다</p>
-                </div>
+    <div id="slider-container">
+        <div id="slide1" class="slide">
+            <div class="text-container">
+                <img id="logo" src="logo.png">
+                <p>우리가 늙어서 운동을 안하는것이 아니라, <br>
+                    운동을 그만두기 때문에 늙는 것이다</p>
+                <!-- 케너스 쿠퍼 -->
             </div>
         </div>
+        <div id="slide2" class="slide">
+            <div class="text-container">
+                <img id="logo" src="logo.png">
+                <p>일단 규칙적으로 운동하면,<br>
+                    이것을 멈추기가 어려울 것이다.</p>
+            </div>
+        </div>
+        <div id="slide3" class="slide">
+            <div class="text-container">
+                <img id="logo" src="logo.png">
+                <p id="healthword">하고자 하는 자는 방법을 찾고,<br>
+                    하기 싫어하는 자는 핑계를 찾는다</p>
+            </div>
+        </div>
+    </div>
     <script>
         const slides = document.querySelectorAll('.slide');
-        let currentSlide = 0;
-    
-        function showSlide(index) 
-        {
-            slides.forEach((slide, i) => 
-            {
-                slide.style.transform = `translateY(${100 * (i - index)}%)`;
+        let currentSlide = 0; // 0으로 초기화해서 첫 silde를 보여준다
+        
+        //슬라이드 움직이면서 보여지게 하는 함수
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.style.transform = `translateY(${100 * (i - index)}%)`;// 전체 100%를 높이로 두고 슬라이드 높이씩 내려가게 한다
             });
         }
-    
-        function nextSlide() 
-        {
+        //silde 클래스 높이를 가져와서 +1 (다음 슬라이드)
+        function nextSlide() {
             currentSlide = (currentSlide + 1) % slides.length;
             showSlide(currentSlide);
         }
-    
-        setInterval(nextSlide, 5000); // 5초마다 다음 슬라이드로 전환
+
+        setInterval(nextSlide, 5000); // 1000 --> 1초
         showSlide(currentSlide);
-    </script>   
+    </script>
 </body>
+
 </html>
