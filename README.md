@@ -2,6 +2,3 @@
 ### 1조
 #### 2301358 김동욱<br>2301406 박주현<br>2301456 이시온
 ### [운동정보 사이트](https://health365.netlify.app/)
-```
-<a href="https://health365.netlify.app/" target="_blank">운동정보 사이트</a>
-```
