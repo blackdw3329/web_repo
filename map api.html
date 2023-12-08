@@ -1,67 +1,80 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8IrxL9rVX3Hv06oS01l7g3ZNYqENGflQ&libraries=places"></script>
+        <script>
+            var map;
+            var service;
+            var infowindow;
+            var currentLocationMarker;
 
-<head>
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8IrxL9rVX3Hv06oS01l7g3ZNYqENGflQ&libraries=places"></script>
-    <script>
-        var map;
-        var service;
-        var infowindow;
+            function initMap() {
+                infowindow = new google.maps.InfoWindow();
 
-        function initMap() {
-            infowindow = new google.maps.InfoWindow();
+                map = new google.maps.Map(
+                    document.getElementById('map'), { 
+                        zoom: 17,
+                        disableDefaultUI: true
+                    });
 
-            map = new google.maps.Map(
-                document.getElementById('map'), {
-                zoom: 17,
-                disableDefaultUI: true
-            });
+                var location = {
+                    lat: 35.9424488,
+                    lng: 126.6833196
+                };
 
-            var location = {
-                lat: 35.9461845,
-                lng: 126.6832088
-            };
+                map.setCenter(location);
 
-            map.setCenter(location);
+                createCurrentLocationMarker(location);
 
-            var request = {
-                location: location,
-                radius: 5000,
-                query: 'gym'
-            };
+                var request = {
+                    location: location,
+                    radius: 5000,
+                    query: 'gym'
+                };
 
-            service = new google.maps.places.PlacesService(map);
+                service = new google.maps.places.PlacesService(map);
 
-            service.textSearch(request, function (results, status) {
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                    for (var i = 0; i < results.length; i++) {
-                        createMarker(results[i]);
+                service.textSearch(request, function(results, status) {
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        for (var i = 0; i < results.length; i++) {
+                            createMarker(results[i]);
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
 
-        function createMarker(place) {
-            var marker = new google.maps.Marker({
-                map: map,
-                position: place.geometry.location,
-                title: place.name
-            });
+            function createCurrentLocationMarker(location) {
+                currentLocationMarker = new google.maps.Marker({
+                    map: map,
+                    position: location,
+                    title: '현재 위치',
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                });
 
-            google.maps.event.addListener(marker, 'click', function () {
-                infowindow.setContent(place.name);
-                infowindow.open(map, this);
-            });
-        }
-    </script>
-</head>
+                google.maps.event.addListener(currentLocationMarker, 'click', function() {
+                    infowindow.setContent(currentLocationMarker.title);
+                    infowindow.open(map, currentLocationMarker);
+                });
+            }
 
-<body>
-    <div id="map" style="height: 820px; width: 100%;"></div>
-    <script>
-        initMap();
-    </script>
-</body>
+            function createMarker(place) {
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: place.geometry.location,
+                    title: place.name
+                });
 
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.setContent(place.name);
+                    infowindow.open(map, this);
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <div id="map" style="height: 820px; width: 100%;"></div>
+        <script>
+            initMap();
+        </script>
+    </body>
 </html>
